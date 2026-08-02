@@ -300,14 +300,15 @@ class LocalTuyaEntity(RestoreEntity, pytuya.ContextualLogger):
     def _has_cached_value(self) -> bool:
         """Return True if this entity holds a usable cached value.
 
-        Platform-aware: binary sensors cache in ``self._is_on`` (where
-        ``False`` is a valid value, so the check is ``is not None``); other
-        platforms fall back to the base ``self._state`` which every platform
-        sets in ``status_updated``.
+        Platform-aware: binary sensors cache in ``self._is_on``, but its
+        init default (False) is indistinguishable from a real "off"
+        reading, so they also set ``_has_received_status`` on the first
+        real report — only then does the cached value count. Other
+        platforms fall back to the base ``self._state`` which every
+        platform sets in ``status_updated``.
         """
-        is_on = getattr(self, "_is_on", None)
-        if is_on is not None:
-            return True
+        if getattr(self, "_is_on", None) is not None:
+            return bool(getattr(self, "_has_received_status", False))
         return self._state is not None
 
     def _within_24h_cap(self) -> bool:

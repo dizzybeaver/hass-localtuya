@@ -49,6 +49,11 @@ class LocalTuyaBinarySensor(LocalTuyaEntity, BinarySensorEntity):
         """Initialize the Tuya binary sensor."""
         super().__init__(device, config_entry, sensorid, _LOGGER, **kwargs)
         self._is_on = False
+        # Design Ref: retain-battery-readings §4.3 — tracks whether a real
+        # status report has ever set _is_on, so _has_cached_value() can
+        # distinguish "never received data" (init default False) from a
+        # genuine False reading reported by the device.
+        self._has_received_status: bool = False
 
         self._reset_timer: float = self._config.get(CONF_RESET_TIMER, 0)
         self._reset_timer_interval: CALLBACK_TYPE | None = None
@@ -62,6 +67,7 @@ class LocalTuyaBinarySensor(LocalTuyaEntity, BinarySensorEntity):
         """Device status was updated."""
         super().status_updated()
 
+        self._has_received_status = True
         state = str(self.dp_value(self._dp_id)).lower()
         # users may set wrong on states, But we assume that must devices use this on states.
         if state in self._config[CONF_STATE_ON].lower().split(","):

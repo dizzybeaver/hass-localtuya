@@ -97,3 +97,17 @@ async def test_battery_binary_sensor_retains_is_on_when_offline():
     # Core regression: cached is_on retained + still available (battery branch).
     assert contact_entity.is_on is True
     assert contact_entity.available is True
+
+
+async def test_battery_binary_sensor_never_reported_stays_offline():
+    """FR-02 edge: battery contact sensor that NEVER received a real status
+    report must NOT appear available+closed offline — the _is_on=False init
+    default is not a real reading. Regression for the false-"closed" bug."""
+    device = await init(BATTERY_CONTACT_CONFIG, PLATFORM_DOMAIN, LocalTuyaBinarySensor)
+    contact_entity, *_ = get_entites(device)
+
+    # No status_updated() call — device went offline before ever reporting.
+    dispatch_disconnect(device)
+
+    # No real reading cached → unavailable, not falsely "closed".
+    assert contact_entity.available is False
