@@ -1,27 +1,17 @@
 """Config flow for LocalTuya integration integration."""
 
 import asyncio
+import copy
 import errno
 import logging
 import time
-import copy
-from importlib import import_module
-from functools import partial
 from collections.abc import Coroutine
-from typing import Any
-
+from importlib import import_module
 
 import homeassistant.helpers.config_validation as cv
 import homeassistant.helpers.entity_registry as er
-from homeassistant.helpers.selector import (
-    SelectSelector,
-    SelectSelectorConfig,
-    SelectSelectorMode,
-    SelectOptionDict,
-)
 import voluptuous as vol
 from homeassistant import exceptions
-from homeassistant.core import callback, HomeAssistant
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
 from homeassistant.const import (
     CONF_CLIENT_ID,
@@ -29,8 +19,8 @@ from homeassistant.const import (
     CONF_DEVICE_ID,
     CONF_DEVICES,
     CONF_ENTITIES,
-    CONF_FRIENDLY_NAME,
     CONF_ENTITY_CATEGORY,
+    CONF_FRIENDLY_NAME,
     CONF_HOST,
     CONF_ICON,
     CONF_ID,
@@ -41,15 +31,19 @@ from homeassistant.const import (
     CONF_USERNAME,
     EntityCategory,
 )
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.selector import (
+    SelectOptionDict,
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
+)
 
-from .coordinator import HassLocalTuyaData
-from .core import pytuya
-from .core.cloud_api import TUYA_ENDPOINTS, TuyaCloudApi
-from .core.helpers import templates, get_gateway_by_deviceid, gen_localtuya_entities
 from .const import (
     ATTR_UPDATED_AT,
     CONF_ADD_DEVICE,
     CONF_CONFIGURE_CLOUD,
+    CONF_DEVICE_SLEEP_TIME,
     CONF_DPS_STRINGS,
     CONF_EDIT_DEVICE,
     CONF_ENABLE_ADD_ENTITIES,
@@ -58,8 +52,8 @@ from .const import (
     CONF_LOCAL_KEY,
     CONF_MANUAL_DPS,
     CONF_MODEL,
-    CONF_NODE_ID,
     CONF_NO_CLOUD,
+    CONF_NODE_ID,
     CONF_PRODUCT_KEY,
     CONF_PRODUCT_NAME,
     CONF_PROTOCOL_VERSION,
@@ -74,8 +68,11 @@ from .const import (
     ENTITY_CATEGORY,
     PLATFORMS,
     SUPPORTED_PROTOCOL_VERSIONS,
-    CONF_DEVICE_SLEEP_TIME,
 )
+from .coordinator import HassLocalTuyaData
+from .core import pytuya
+from .core.cloud_api import TUYA_ENDPOINTS, TuyaCloudApi
+from .core.helpers import gen_localtuya_entities, get_gateway_by_deviceid, templates
 from .discovery import discover
 
 _LOGGER = logging.getLogger(__name__)
@@ -638,11 +635,11 @@ class LocalTuyaOptionsFlowHandler(OptionsFlow):
             )
 
         if not is_cloud:
-            err_msg = f"This feature requires cloud API setup for now"
+            err_msg = "This feature requires cloud API setup for now"
         elif not device_data:
-            err_msg = f"Couldn't find your device in the cloud account you using"
+            err_msg = "Couldn't find your device in the cloud account you using"
         elif not category:
-            err_msg = f"Your device category isn't supported"
+            err_msg = "Your device category isn't supported"
         elif not dev_data:
             err_msg = f"Couldn't find the data for your device category: {category}."
 
@@ -1111,9 +1108,9 @@ def strip_dps_values(user_input, dps_strings):
     stripped = {}
     for field, value in user_input.items():
         if value in dps_strings:
-            stripped[field] = int(user_input[field].split(" ")[0])
+            stripped[field] = int(value.split(" ")[0])
         else:
-            stripped[field] = user_input[field]
+            stripped[field] = value
     return stripped
 
 
@@ -1212,7 +1209,7 @@ async def validate_input(entry_runtime: HassLocalTuyaData, data):
                             float(version),
                             data[CONF_ENABLE_DEBUG],
                         )
-                        logger.info(f"Connected attempt to detect the device DPS")
+                        logger.info("Connected attempt to detect the device DPS")
                         detected_dps = await interface.detect_available_dps(cid=cid)
 
                     # Break the loop if input isn't auto.
@@ -1308,8 +1305,13 @@ async def validate_input(entry_runtime: HassLocalTuyaData, data):
     # If bypass handshake. otherwise raise failed to make handshake with device.
     # --- Cloud: We will use the DPS found on cloud if exists.
     # --- No cloud: user will have to input the DPS manually.
+    # BLE sub-devices behind a gateway never report LAN DPS (the gateway only
+    # proxies Zigbee state, not BLE), so when the cloud returned function codes
+    # for a sub-device (cid set) treat them as sufficient to complete setup.
     if not detected_dps_device and not (
-        (cloud_dp_codes or detected_dps) and bypass_handshake
+        (cloud_dp_codes or detected_dps)
+        and bypass_handshake
+        or (cid and cloud_dp_codes)
     ):
         raise EmptyDpsList
 
