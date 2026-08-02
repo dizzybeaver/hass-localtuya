@@ -1,14 +1,15 @@
 """Code shared between all platforms."""
 
 import logging
-from typing import Any, Coroutine, Callable
+from collections.abc import Callable, Coroutine
+from datetime import datetime, timedelta
+from typing import Any
 
-from homeassistant.core import HomeAssistant, State
 from homeassistant.config_entries import ConfigEntry
-
 from homeassistant.const import (
-    CONF_DEVICES,
+    ATTR_VIA_DEVICE,
     CONF_DEVICE_CLASS,
+    CONF_DEVICES,
     CONF_ENTITIES,
     CONF_ENTITY_CATEGORY,
     CONF_FRIENDLY_NAME,
@@ -16,37 +17,43 @@ from homeassistant.const import (
     CONF_ICON,
     CONF_ID,
     CONF_PLATFORM,
-    EntityCategory,
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
-    ATTR_VIA_DEVICE,
+    EntityCategory,
 )
+from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import (
     async_dispatcher_connect,
     async_dispatcher_send,
 )
-
-from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.restore_state import RestoreEntity
+from homeassistant.util import dt as dt_util
 
-from .core import pytuya
-from .coordinator import HassLocalTuyaData, TuyaDevice
 from .const import (
     ATTR_STATE,
     CONF_DEFAULT_VALUE,
     CONF_ID,
     CONF_NODE_ID,
+    CONF_OFFSET,
     CONF_PASSIVE_ENTITY,
     CONF_RESTORE_ON_RECONNECT,
     CONF_SCALING,
-    CONF_OFFSET,
     DOMAIN,
     RESTORE_STATES,
     DeviceConfig,
 )
+from .coordinator import HassLocalTuyaData, TuyaDevice
+from .core import pytuya
 
 _LOGGER = logging.getLogger(__name__)
+
+# Design Ref: retain-battery-readings-offline §4.5 — battery-backed devices keep
+# their last reading while disconnected up to this hard cap (24 h). Beyond it the
+# reading is treated as stale (dead battery / lost connection) and the entity goes
+# unavailable.
+_BATTERY_STALE_THRESHOLD = timedelta(hours=24)
 
 
 async def async_setup_entry(
@@ -150,6 +157,14 @@ class LocalTuyaEntity(RestoreEntity, pytuya.ContextualLogger):
             "add_entites_callback"
         )
         self._loaded = False
+        # Plan SC: FR-01 — detect once at init whether this device has a
+        # battery-class sibling entity. Config is immutable for the entity's
+        # lifetime.
+        self._is_battery_backed_device = self._compute_battery_backed()
+        # Plan SC: FR-06 — wall-clock time of the most recent REAL status
+        # report. None until the first report arrives, so a never-updated
+        # entity never appears available via the battery branch.
+        self._last_status_update_ts: datetime | None = None
 
         # Default value is available to be provided by Platform entities if required
         self._default_value = self._config.get(CONF_DEFAULT_VALUE)
@@ -241,15 +256,67 @@ class LocalTuyaEntity(RestoreEntity, pytuya.ContextualLogger):
     @property
     def unique_id(self) -> str:
         """Return unique device identifier."""
-        if getattr(self, "_attr_unique_id") is not None:
+        if self._attr_unique_id is not None:
             return self._attr_unique_id
 
         return f"local_{self._device_config.id}_{self._dp_id}"
 
     @property
     def available(self) -> bool:
-        """Return if device is available or not."""
-        return (len(self._status) > 0) or self._device.connected
+        """Return if device is available or not.
+
+        Battery-backed devices (those with a battery-class sibling entity)
+        remain available while offline if they hold a cached value updated
+        within the 24-hour hard cap, so their last reading stays visible
+        across the device's sleep cycle. Non-battery devices behave exactly
+        as before (unavailable on disconnect).
+        """
+        # Design Ref: retain-battery-readings §4.2 — current behavior preserved.
+        if (len(self._status) > 0) or self._device.connected:
+            return True
+        # Design Ref: retain-battery-readings §4.2 — offline battery branch.
+        return bool(
+            self._is_battery_backed_device
+            and self._has_cached_value()
+            and self._within_24h_cap()
+        )
+
+    def _compute_battery_backed(self) -> bool:
+        """Return True if this device has any battery-class entity configured.
+
+        Scans the device-level entity configs (not this entity's own config),
+        because the battery DP and the reading DP are typically different
+        entities on the same device. ``DeviceConfig.entities`` is the raw list
+        of per-entity config dicts; each may carry a ``device_class`` key.
+        """
+        battery_classes = {"battery", "battery_percentage"}
+        entities = self._device_config.entities or []
+        for entity_cfg in entities:
+            device_class = entity_cfg.get(CONF_DEVICE_CLASS)
+            if device_class is not None and str(device_class) in battery_classes:
+                return True
+        return False
+
+    def _has_cached_value(self) -> bool:
+        """Return True if this entity holds a usable cached value.
+
+        Platform-aware: binary sensors cache in ``self._is_on`` (where
+        ``False`` is a valid value, so the check is ``is not None``); other
+        platforms fall back to the base ``self._state`` which every platform
+        sets in ``status_updated``.
+        """
+        is_on = getattr(self, "_is_on", None)
+        if is_on is not None:
+            return True
+        return self._state is not None
+
+    def _within_24h_cap(self) -> bool:
+        """Return True if the last real status update is within the 24h cap."""
+        if self._last_status_update_ts is None:
+            return False
+        return (
+            dt_util.utcnow() - self._last_status_update_ts
+        ) < _BATTERY_STALE_THRESHOLD
 
     @property
     def entity_category(self) -> str:
@@ -270,7 +337,7 @@ class LocalTuyaEntity(RestoreEntity, pytuya.ContextualLogger):
     @property
     def device_class(self):
         """Return the class of this device."""
-        attr_device_class = getattr(self, "_attr_device_class")
+        attr_device_class = self._attr_device_class
         return attr_device_class or self._config.get(CONF_DEVICE_CLASS)
 
     def has_config(self, attr) -> bool:
@@ -303,6 +370,11 @@ class LocalTuyaEntity(RestoreEntity, pytuya.ContextualLogger):
         """
         state = self.dp_value(self._dp_id)
         self._state = state
+        # Plan SC: FR-06 — stamp wall-clock time of this REAL status report.
+        # _update_handler only calls status_updated() when status is a truthy
+        # dict (the None shutdown signal skips it), so this never refreshes on
+        # disconnect.
+        self._last_status_update_ts = dt_util.utcnow()
 
         # Keep record in last_state as long as not during connection/re-connection,
         # as last state will be used to restore the previous state
@@ -318,7 +390,7 @@ class LocalTuyaEntity(RestoreEntity, pytuya.ContextualLogger):
         if raw_state is not None:
             self._last_state = raw_state
             self.debug(
-                f"Restoring state for entity: {self.name} - state: {str(self._last_state)}"
+                f"Restoring state for entity: {self.name} - state: {self._last_state!s}"
             )
 
     def connection_made(self):
@@ -403,7 +475,7 @@ class LocalTuyaEntity(RestoreEntity, pytuya.ContextualLogger):
                 return
 
         self.debug(
-            f"Entity {self.name} (DP {self._dp_id}) - Restoring state: {str(restore_state)}"
+            f"Entity {self.name} (DP {self._dp_id}) - Restoring state: {restore_state!s}"
         )
 
         # Manually initialise

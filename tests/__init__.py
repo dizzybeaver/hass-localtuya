@@ -1,19 +1,19 @@
 """Init localtuya tests"""
 
 import asyncio
-import homeassistant.util.ulid as ulid_util
-import os, sys
-import pytest
+import os
+import sys
 import threading
 import time
-
 from typing import Any
 from unittest.mock import AsyncMock, Mock
+
+import homeassistant.util.ulid as ulid_util
+import pytest
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from custom_components.localtuya import TuyaCloudApi
-from custom_components.localtuya import coordinator
-from custom_components.localtuya import entity
+
+from custom_components.localtuya import TuyaCloudApi, coordinator, entity
 from custom_components.localtuya.const import DOMAIN
 
 HOST = "192.168.1.100"
@@ -78,8 +78,28 @@ def create_entry(config: dict[str, dict[str, Any]]):
         "unique_id": None,
         "version": 1,
         "source": "user",
+        "subentries_data": [],
     }
 
 
 def get_entites(device: coordinator.TuyaDevice):
-    return getattr(device, "_entities")
+    return device._entities
+
+
+def dispatch_disconnect(device: coordinator.TuyaDevice):
+    """Simulate the coordinator None shutdown signal (device disconnect).
+
+    Mirrors the data-mutation half of LocalTuyaEntity._update_handler(None)
+    from entity.py: it clears each entity's cached _status dict so the
+    `available` property's live-status branch returns False, exposing the
+    battery-offline retain branch. We do NOT call schedule_update_ha_state
+    (no real HA event loop in the test harness) and we force the device's
+    `connected` flag False so the property's 1st branch doesn't mask the
+    offline path.
+    """
+    # `connected` is a read-only property (coordinator.py:121) derived from
+    # self._interface, which the test harness never sets — so it already
+    # evaluates falsy here. We only need to clear cached status to expose the
+    # battery-offline retain branch in the `available` property.
+    for ent in get_entites(device):
+        ent._status = {}

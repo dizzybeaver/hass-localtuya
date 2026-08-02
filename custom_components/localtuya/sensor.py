@@ -1,15 +1,13 @@
 """Platform to present any Tuya DP as a sensor."""
 
-import logging
 import base64
+import logging
 from functools import partial
-from .config_flow import col_to_select
 
 import voluptuous as vol
 from homeassistant.components.sensor import (
     DEVICE_CLASSES_SCHEMA,
     DOMAIN,
-    STATE_CLASSES_SCHEMA,
     SensorDeviceClass,
     SensorEntity,
     SensorStateClass,
@@ -17,16 +15,16 @@ from homeassistant.components.sensor import (
 from homeassistant.const import (
     CONF_DEVICE_CLASS,
     CONF_UNIT_OF_MEASUREMENT,
-    Platform,
-    STATE_UNKNOWN,
     UnitOfElectricCurrent,
     UnitOfElectricPotential,
     UnitOfPower,
 )
 from homeassistant.helpers import entity_registry as er
+from homeassistant.util import dt as dt_util
 
+from .config_flow import col_to_select
+from .const import CONF_OFFSET, CONF_SCALING, CONF_STATE_CLASS
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import CONF_SCALING, CONF_OFFSET, CONF_STATE_CLASS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -98,6 +96,10 @@ class LocalTuyaSensor(LocalTuyaEntity, SensorEntity):
     def status_updated(self):
         """Device status was updated."""
 
+        # Plan SC: FR-06 — stamp timestamp for battery-offline retention. This
+        # override does not call super(), so the base stamp would be missed.
+        self._last_status_update_ts = dt_util.utcnow()
+
         state = self.dp_value(self._dp_id)
 
         if self.is_base64(state):
@@ -152,12 +154,12 @@ class LocalTuyaSensor(LocalTuyaEntity, SensorEntity):
             sub_entity = LocalTuyaSensor(
                 self._device, self._device_config.as_dict(), self._dp_id
             )
-            setattr(sub_entity, "_attr_sub_sensor", sensor)
-            setattr(sub_entity, "_attr_unique_id", f"{self.unique_id}_{sensor}")
-            setattr(sub_entity, "_attr_name", f"{self.name} {sensor.capitalize()}")
-            setattr(sub_entity, "_attr_device_class", SensorDeviceClass(sensor))
-            setattr(sub_entity, "_attr_state_class", SensorStateClass.MEASUREMENT)
-            setattr(sub_entity, "_attr_native_unit_of_measurement", MAP_UOM[sensor])
+            sub_entity._attr_sub_sensor = sensor
+            sub_entity._attr_unique_id = f"{self.unique_id}_{sensor}"
+            sub_entity._attr_name = f"{self.name} {sensor.capitalize()}"
+            sub_entity._attr_device_class = SensorDeviceClass(sensor)
+            sub_entity._attr_state_class = SensorStateClass.MEASUREMENT
+            sub_entity._attr_native_unit_of_measurement = MAP_UOM[sensor]
             sub_entities.append(sub_entity)
 
         # Sub entities shouldn't have add entities attr.
