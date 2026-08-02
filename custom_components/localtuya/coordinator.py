@@ -262,7 +262,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
                 self.exception(f"Handshake with {host} failed: due to {type(e)}: {e}")
                 await self.abort_connect()
                 update_localkey = True
-            except asyncio.CancelledError as e:
+            except asyncio.CancelledError:
                 await self.abort_connect()
                 self._task_connect = None
             except Exception as e:
@@ -273,7 +273,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
                     if self.is_subdevice or "key" in str(e):
                         # TODO: Add exceptions for pytuya.
                         update_localkey = True
-            except:
+            except Exception:
                 if self._fake_gateway:
                     self.warning(f"Failed to use {name} as gateway.")
                     await self.abort_connect()

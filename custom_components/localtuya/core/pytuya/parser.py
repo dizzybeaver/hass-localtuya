@@ -24,7 +24,7 @@ def pack_message(msg: TuyaMessage, hmac_key: bytes = None):
         header_fmt = MessagesFormat.HEADER_6699
         end_fmt = MessagesFormat.END_6699
         msg_len = len(msg.payload) + (struct.calcsize(end_fmt) - 4) + 12
-        if type(msg.retcode) == int:
+        if isinstance(msg.retcode, int):
             msg_len += struct.calcsize(MessagesFormat.RETCODE)
         header_data = (msg.prefix, 0, msg.seqno, msg.cmd, msg_len)
     else:
@@ -37,7 +37,7 @@ def pack_message(msg: TuyaMessage, hmac_key: bytes = None):
 
     if msg.prefix == Affix.prefix_6699.value:
         cipher = AESCipher(hmac_key)
-        if type(msg.retcode) == int:
+        if isinstance(msg.retcode, int):
             raw = struct.pack(MessagesFormat.RETCODE, msg.retcode) + msg.payload
         else:
             raw = msg.payload
@@ -148,7 +148,7 @@ def unpack_message(
                 tag=crc,
             )
             crc_good = True
-        except:
+        except Exception:
             crc_good = False
 
         retcode_len = struct.calcsize(MessagesFormat.RETCODE)

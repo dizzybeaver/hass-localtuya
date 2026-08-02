@@ -104,7 +104,7 @@ def gen_localtuya_entities(localtuya_data: dict, tuya_category: str) -> list[dic
 
                 # used_dp = 0
                 for k, code in localtuya_conf.items():
-                    if type(code) == Enum:
+                    if isinstance(code, Enum):
                         code = code.value
 
                     # If there's multi possible codes.
@@ -179,7 +179,7 @@ def parse_enum(dp_code: Enum) -> str:
     """Get enum value if code type is enum"""
     try:
         parsed_dp_code = dp_code.value
-    except:
+    except AttributeError:
         parsed_dp_code = dp_code
 
     return parsed_dp_code

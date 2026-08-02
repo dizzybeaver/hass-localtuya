@@ -721,7 +721,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
 
         try:
             await self.transport_write(enc_payload)
-        except (Exception, TimeoutError) as ee:  # pylint: disable=broad-except
+        except (Exception, TimeoutError):  # pylint: disable=broad-except
             return self.clean_up_session()
 
         while recv_retries:
@@ -975,7 +975,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
             if not isinstance(payload, str):
                 try:
                     payload = payload.decode()
-                except Exception as ex:
+                except Exception:
                     self.debug("payload was not string type and decoding failed")
                     return self.error_json(ERR_JSON, payload)
 
@@ -996,7 +996,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
         self.debug("Deciphered data = %r", payload)
         try:
             json_payload = json.loads(payload)
-        except Exception as ex:
+        except Exception:
             json_payload = self.error_json(ERR_JSON, payload)
 
             if "devid not" in payload:  # DeviceID Not found.
@@ -1033,7 +1033,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
             rkey = await self.exchange_quick(
                 MessagePayload(CMDType.SESS_KEY_NEG_START, self.local_nonce), 2
             )
-        except:
+        except Exception:
             # Device may instantly disconnect if we sent send wrong localkey.
             if not self.is_connected:
                 raise ConnectionAbortedError("Session key negotiation failed on step 1")
@@ -1110,7 +1110,6 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
     # adds protocol header (if needed) and encrypts
     def _encode_message(self, msg: MessagePayload):
         hmac_key = None
-        iv = None
         payload = msg.payload
         self.cipher = AESCipher(self.local_key)
 
@@ -1122,7 +1121,6 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
             self.debug("final payload for cmd %r: %r", msg.cmd, payload)
 
             if self.version >= 3.5:
-                iv = True
                 # seqno cmd retcode payload crc crc_good, prefix, iv
                 msg = TuyaMessage(
                     self.seqno,
@@ -1335,7 +1333,7 @@ async def connect(
         raise ex
     except (Exception, asyncio.CancelledError) as ex:
         raise ex
-    except:
+    except Exception:
         raise Exception(f"The host refused to connect")
 
     return protocol

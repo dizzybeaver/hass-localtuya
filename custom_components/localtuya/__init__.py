@@ -72,7 +72,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
     """Set up the LocalTuya integration component."""
     hass.data.setdefault(DOMAIN, {})
 
-    current_entries = hass.config_entries.async_entries(DOMAIN)
     device_cache = {}
 
     async def _handle_reload(service: ServiceCall):
@@ -221,7 +220,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
 async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     """Migrate old entries merging all of them in one."""
     new_version = ENTRIES_VERSION
-    stored_entries = hass.config_entries.async_entries(DOMAIN)
     if config_entry.version == 1:
         # This an old version of original integration no need to put it here.
         pass

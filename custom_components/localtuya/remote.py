@@ -109,7 +109,7 @@ def rf_decode_button(base64_code):
         jstr = base64.b64decode(base64_code)
         jdata: dict = json.loads(jstr)
         return jdata
-    except:
+    except Exception:
         return {}
 
 
@@ -213,7 +213,7 @@ class LocalTuyaRemote(LocalTuyaEntity, RemoteEntity):
         if not self._attr_is_on:
             raise ServiceValidationError(f"Remote {self.entity_id} is turned off")
 
-        now, timeout = 0, kwargs.get(ATTR_TIMEOUT, 30)
+        timeout = kwargs.get(ATTR_TIMEOUT, 30)
 
         device = kwargs.get(ATTR_DEVICE)
         commands = kwargs.get(ATTR_COMMAND)
@@ -441,7 +441,6 @@ class LocalTuyaRemote(LocalTuyaEntity, RemoteEntity):
 
     def status_updated(self):
         """Device status was updated."""
-        state = self.dp_value(self._dp_id)
         if (dp_recv := self.dp_value(self._dp_recieve)) != self._last_code:
             self._last_code = dp_recv
             self._event.set()

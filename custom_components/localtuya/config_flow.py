@@ -97,7 +97,7 @@ def col_to_select(
     opt_list: dict | list, multi_select=False, is_dps=False, custom_value=False
 ) -> SelectSelector:
     """Convert collections to SelectSelectorConfig."""
-    if type(opt_list) == dict:
+    if isinstance(opt_list, dict):
         return SelectSelector(
             SelectSelectorConfig(
                 options=[
@@ -108,7 +108,7 @@ def col_to_select(
                 multiple=True if multi_select else False,
             )
         )
-    elif type(opt_list) == list:
+    elif isinstance(opt_list, list):
         # value used the same method as func available_dps_string, no spaces values.
         return SelectSelector(
             SelectSelectorConfig(
@@ -607,14 +607,12 @@ class LocalTuyaOptionsFlowHandler(OptionsFlow):
     async def async_step_auto_configure_device(self, user_input=None):
         """Handle asking which templates to use"""
 
-        errors = {}
         placeholders = {}
 
         # Gather the information
         is_cloud = not self.config_entry.data.get(CONF_NO_CLOUD)
         dev_id = self.selected_device
         category = None
-        node_id = self.nodeID
         device_data = self.cloud_data.device_list.get(dev_id)
         if device_data:
             category = self.cloud_data.device_list[dev_id].get(TUYA_CATEGORY, "")
@@ -930,7 +928,7 @@ async def setup_localtuya_devices(
     for dev_id, dev_data in copy.deepcopy(devices).items():
         category = devices_cloud_data[dev_id].get("category")
         dev_data[DEVICE_CLOUD_DATA] = devices_cloud_data[dev_id]
-        if category and (dps_strings := dev_data.get(CONF_DPS_STRINGS, False)):
+        if category and dev_data.get(CONF_DPS_STRINGS, False):
             dev_entites = gen_localtuya_entities(dev_data, category)
 
         # Configure entities fails
@@ -1232,7 +1230,7 @@ async def validate_input(entry_runtime: HassLocalTuyaData, data):
                     logger.error(f"Connection failed! {ex}")
                     error = ex
                     break
-                except:
+                except Exception:
                     continue
                 finally:
                     if not auto_protocol and data.get(CONF_DEVICE_SLEEP_TIME, 0) > 0:
