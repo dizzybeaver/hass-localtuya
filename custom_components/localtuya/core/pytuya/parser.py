@@ -151,7 +151,7 @@ def unpack_message(
                 tag=crc,
             )
             crc_good = True
-        except Exception:
+        except (ValueError, KeyError):  # FIXED: W0718 - crypto/struct errors
             crc_good = False
 
         retcode_len = struct.calcsize(MessagesFormat.RETCODE)

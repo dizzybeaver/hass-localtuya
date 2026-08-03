@@ -303,7 +303,12 @@ class TuyaCloudApi:
         ]
         try:
             specs, query_props, query_model = await asyncio.gather(*get_data)
-        except (Exception,) as ex:
+        except (
+            OSError,
+            ValueError,
+            RuntimeError,
+            asyncio.TimeoutError,
+        ) as ex:  # FIXED: W0718
             self._logger.debug(f"Failed to get DPS functions for {device_id} - {ex}")
             return
 

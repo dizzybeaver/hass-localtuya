@@ -295,7 +295,7 @@ class MessageDispatcher(ContextualLogger):
         if seqno in self.listeners:
             self.debug(f"listener exists for {seqno}")
             if seqno == self.HEARTBEAT_SEQNO:
-                raise Exception(f"listener exists for {seqno}")
+                raise RuntimeError(f"listener exists for {seqno}")  # FIXED: W0719
 
         self.debug("Command %d waiting for seq. number %d", cmd, seqno)
         future = asyncio.Future()
@@ -305,9 +305,9 @@ class MessageDispatcher(ContextualLogger):
             return response
         except asyncio.TimeoutError:
             self.abort()
-            raise TimeoutError(
+            raise TimeoutError(  # FIXED: W0707
                 f"Command {cmd} timed out waiting for sequence number {seqno}"
-            )
+            ) from None
         finally:
             self.listeners.pop(seqno, True)
 
@@ -941,7 +941,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
             try:
                 # self.debug("decrypting=%r", payload)
                 payload = cipher.decrypt(payload, False, decode_text=False)
-            except Exception as ex:
+            except (ValueError, KeyError) as ex:  # FIXED: W0718 - crypto decrypt errors
                 self.debug(
                     "incomplete payload=%r with len:%d (%s)", payload, len(payload), ex
                 )
@@ -969,7 +969,10 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
                 try:
                     # self.debug("decrypting=%r", payload)
                     payload = cipher.decrypt(payload, False)
-                except Exception as ex:
+                except (
+                    ValueError,
+                    KeyError,
+                ) as ex:  # FIXED: W0718 - crypto decrypt errors
                     self.debug(
                         "incomplete payload=%r with len:%d (%s)",
                         payload,
@@ -984,7 +987,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
             if not isinstance(payload, str):
                 try:
                     payload = payload.decode()
-                except Exception:
+                except (UnicodeDecodeError, AttributeError):  # FIXED: W0718
                     self.debug("payload was not string type and decoding failed")
                     return self.error_json(ERR_JSON, payload)
 
@@ -1005,11 +1008,13 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
         self.debug("Deciphered data = %r", payload)
         try:
             json_payload = json.loads(payload)
-        except Exception:
+        except (ValueError, UnicodeDecodeError):  # FIXED: W0718 - json decode
             json_payload = self.error_json(ERR_JSON, payload)
 
             if "devid not" in payload:  # DeviceID Not found.
-                raise ValueError(f"DeviceID [{self.id}] Not found")
+                raise ValueError(  # FIXED: W0707
+                    f"DeviceID [{self.id}] Not found"
+                ) from None
             # else:
             #     raise DecodeError(
             #         f"[{self.id}]: could not decrypt data: wrong local_key? (exception: {ex}, payload: {payload})"
@@ -1042,10 +1047,12 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
             rkey = await self.exchange_quick(
                 MessagePayload(CMDType.SESS_KEY_NEG_START, self.local_nonce), 2
             )
-        except Exception:
+        except (OSError, ValueError, ConnectionError) as exc:  # FIXED: W0718
             # Device may instantly disconnect if we sent send wrong localkey.
             if not self.is_connected:
-                raise ConnectionAbortedError("Session key negotiation failed on step 1")
+                raise ConnectionAbortedError(
+                    "Session key negotiation failed on step 1"
+                ) from exc  # FIXED: W0707
 
         if not rkey or not isinstance(rkey, TuyaMessage) or len(rkey.payload) < 48:
             # error
@@ -1065,7 +1072,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
                 # self.debug("decrypting %r using %r", payload, self.real_local_key)
                 cipher = AESCipher(self.real_local_key)
                 payload = cipher.decrypt(payload, False, decode_text=False)
-            except Exception as ex:
+            except (ValueError, KeyError) as ex:  # FIXED: W0718 - crypto decrypt errors
                 self.debug(
                     "session key step 2 decrypt failed, payload=%r with len:%d (%s)",
                     payload,
@@ -1333,16 +1340,18 @@ async def connect(
                 port,
             )
     # Assuming the connect timed out then then the host isn't reachable.
-    except (OSError, TimeoutError) as ex:
+    except OSError as ex:  # catches TimeoutError too (subclass)
         if ex.errno == errno.EHOSTUNREACH or isinstance(ex, TimeoutError):
-            raise OSError(
+            raise OSError(  # FIXED: W0707
                 errno.EHOSTUNREACH,
                 os.strerror(errno.EHOSTUNREACH) + f" ('{address}', '{port}')",
-            )
+            ) from ex
         raise ex
-    except (Exception, asyncio.CancelledError) as ex:
+    except asyncio.CancelledError as ex:  # FIXED: W0705 - separate CancelledError
         raise ex
-    except Exception:
-        raise Exception("The host refused to connect")
+    except RuntimeError as ex:  # OSError above already catches ConnectionError
+        raise ConnectionError(
+            "The host refused to connect"
+        ) from ex  # FIXED: W0707/W0719
 
     return protocol

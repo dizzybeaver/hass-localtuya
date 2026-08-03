@@ -115,7 +115,7 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
         dps = event.data.get("dps")
         try:
-            await device._interface.update_dps(dps=dps, cid=device._node_id)
+            await device.update_dps(dps=dps)
         except TimeoutError:
             pass
 
@@ -397,14 +397,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     async def _shutdown(event):
         """Clean up resources when shutting down."""
         await asyncio.gather(*[dev.close() for dev in connect_to_devices])
-        _LOGGER.info(f"{entry.title}: Shutdown completed")
+        _LOGGER.info("%s: Shutdown completed", entry.title)
 
     entry.async_on_unload(
         hass.bus.async_listen_once(EVENT_HOMEASSISTANT_STOP, _shutdown)
     )
 
     entry.async_on_unload(_run_async_listen(hass, entry))
-    _LOGGER.info(f"{entry.title}: Setup completed")
+    _LOGGER.info("%s: Setup completed", entry.title)
     return True
 
 

@@ -187,11 +187,11 @@ class LocalTuyaWaterHeater(LocalTuyaEntity, WaterHeaterEntity):
         status[self._dp_mode] = self._available_modes.to_tuya(operation_mode)
         await self._device.set_dps(status)
 
-    async def async_turn_on(self) -> None:
+    async def async_turn_on(self, **kwargs) -> None:
         """Turn the entity on."""
         await self._device.set_dp(True, self._dp_id)
 
-    async def async_turn_off(self) -> None:
+    async def async_turn_off(self, **kwargs) -> None:
         """Turn the entity off."""
         await self._device.set_dp(False, self._dp_id)
 

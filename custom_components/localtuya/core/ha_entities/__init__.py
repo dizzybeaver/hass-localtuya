@@ -93,7 +93,7 @@ def gen_localtuya_entities(localtuya_data: dict, tuya_category: str) -> list[dic
     detected_dps: list = localtuya_data.get(CONF_DPS_STRINGS)
 
     if not tuya_category or not detected_dps:
-        _LOGGER.debug(f"Missing category: {tuya_category} or DPS: {detected_dps}")
+        _LOGGER.debug("Missing category: %s or DPS: %s", tuya_category, detected_dps)
         return
 
     device_name: str = localtuya_data.get(CONF_FRIENDLY_NAME).strip()
@@ -134,7 +134,9 @@ def gen_localtuya_entities(localtuya_data: dict, tuya_category: str) -> list[dic
 
                         if k in entity:
                             # if the k already configured break the loop!.
-                            _LOGGER.debug(f"{k} Already configured with: {entity[k]}.")
+                            _LOGGER.debug(
+                                "%s Already configured with: %s.", k, entity[k]
+                            )
                             break
 
                         if contains_any is not None:
@@ -167,13 +169,13 @@ def gen_localtuya_entities(localtuya_data: dict, tuya_category: str) -> list[dic
                         continue
                     # Workaround to Prevent duplicated id.
                     if entity[CONF_ID] in entities:
-                        _LOGGER.debug(f"{device_name}: Duplicated ID: {entity}")
+                        _LOGGER.debug("%s: Duplicated ID: %s", device_name, entity)
                         continue
 
                     entity.update(main_confs)
                     entity[CONF_PLATFORM] = platform
                     entities[entity.get(CONF_ID)] = entity
-                    _LOGGER.debug(f"{device_name}: Entity configured: {entity}")
+                    _LOGGER.debug("%s: Entity configured: %s", device_name, entity)
 
     # sort entities by id
     sorted_ids = sorted(entities, key=int)
@@ -181,7 +183,7 @@ def gen_localtuya_entities(localtuya_data: dict, tuya_category: str) -> list[dic
     # convert to list of configs
     list_entities = [entities.get(id) for id in sorted_ids]
 
-    _LOGGER.debug(f"{device_name}: Configured entities: {list_entities}")
+    _LOGGER.debug("%s: Configured entities: %s", device_name, list_entities)
     # return []
     return list_entities
 
@@ -253,9 +255,9 @@ def get_dp_values(dp: str, dps_data: dict, req_info: CLOUD_VALUE = None) -> dict
             return dp_values
 
 
-def scale(value: int, scale: int, _type: type = int) -> float:
+def scale(value: int, scale_factor: int, _type: type = int) -> float:
     """Return scaled value."""
-    value = _type(value) / (10**scale)
+    value = _type(value) / (10**scale_factor)
     if value.is_integer():
         value = int(value)
     return value

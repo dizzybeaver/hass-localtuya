@@ -234,7 +234,7 @@ class DictSelector:
         reverse (bool): Swaps `tuya_ha` keys and values.
     """
 
-    tuya_ha: dict[str, Any]
+    tuya_ha: dict[str, Any] | str
     reverse: bool = False
 
     def __post_init__(self):

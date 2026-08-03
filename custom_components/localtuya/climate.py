@@ -455,10 +455,10 @@ class LocalTuyaClimate(LocalTuyaEntity, ClimateEntity):
             self._swing_v_modes.to_tuya(swing_mode), self._swing_v_mode_dp
         )
 
-    async def async_set_swing_horizontal_mode(self, swing_mode):
+    async def async_set_swing_horizontal_mode(self, swing_horizontal_mode):
         """Set new target horizontal swing operation."""
         await self._device.set_dp(
-            self._swing_h_modes.to_tuya(swing_mode), self._swing_h_mode_dp
+            self._swing_h_modes.to_tuya(swing_horizontal_mode), self._swing_h_mode_dp
         )
 
     async def async_set_temperature(self, **kwargs):

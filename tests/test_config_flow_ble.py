@@ -70,6 +70,11 @@ class _FakeGateway:
         self.connected = True
         self.is_connecting = False
 
+    @property
+    def interface(self):
+        """Expose interface to match TuyaDevice.public accessor."""
+        return self._interface
+
 
 def _runtime(*, lan_dps: dict, cloud_codes: dict, dev_in_cloud: bool):
     """Build a stub ``HassLocalTuyaData``.

@@ -467,14 +467,6 @@ class LocalTuyaLight(LocalTuyaEntity, LightEntity):
             )
         ).decode("ascii")
 
-    def __to_color_(self, hs, brightness):
-        # https://developer.tuya.com/en/docs/iot/dj?id=K9i5ql3v98hn3#title-8-colour_data
-        return "{:04x}{:02x}{:02x}".format(
-            round(hs[0]),
-            round(hs[1] * 255 / 100),
-            round(brightness * 255 / self._upper_brightness),
-        )
-
     def __to_color_v2(self, hs, brightness):
         # https://developer.tuya.com/en/docs/iot/dj?id=K9i5ql3v98hn3#title-9-colour_data_v2
         return "{:04x}{:04x}{:04x}".format(
@@ -507,12 +499,6 @@ class LocalTuyaLight(LocalTuyaEntity, LightEntity):
         value = (hsl % 256) * self._upper_brightness / 100
         self._hs = [hue, sat]
         self._brightness = value
-
-    def __from_color_(self, color):
-        # https://developer.tuya.com/en/docs/iot/dj?id=K9i5ql3v98hn3#title-8-colour_data
-        hue, sat, value = [int(value, 16) for value in textwrap.wrap(color, 4)]
-        self._hs = [hue, sat * 100 / 255]
-        self._brightness = value * self._upper_brightness / 100
 
     def __from_color_v2(self, color):
         # https://developer.tuya.com/en/docs/iot/dj?id=K9i5ql3v98hn3#title-9-colour_data_v2

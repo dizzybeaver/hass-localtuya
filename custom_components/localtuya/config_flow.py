@@ -251,6 +251,7 @@ class LocalTuyaOptionsFlowHandler(OptionsFlow):
         self.entities = []
         self.use_template = False
         self.template_device = None
+        self._confirm_callback = None
 
     @property
     def localtuya_data(self) -> HassLocalTuyaData:
@@ -881,7 +882,7 @@ async def setup_localtuya_devices(
         fails.update({dev_id: {"name": name, "reason": reason}})
         if log_fails:
             msg = f"[ name: {name} — id: {dev_id} — reason: {reason or repr(reason)}]"
-            _LOGGER.warning(f"Failed to configure device: {msg}")
+            _LOGGER.warning("Failed to configure device: %s", msg)
 
     # To avoid duplicated entities we will get all devices in every hub.
     entries = hass.config_entries.async_entries(DOMAIN)
@@ -957,16 +958,21 @@ async def discover_devices() -> tuple[dict[str, dict], dict[str, str]]:
             errors["base"] = "address_in_use"
         else:
             errors["base"] = "discovery_failed"
-    except Exception as ex:
+    except (
+        RuntimeError,
+        ValueError,
+    ) as ex:  # OSError above already catches TimeoutError
         _LOGGER.exception("discovery failed: %s", ex)
         errors["base"] = "discovery_failed"
     return discovered_devices, errors
 
 
 def devices_schema(
-    discovered_devices, cloud_devices_list, add_custom_device=True, existed_devices={}
+    discovered_devices, cloud_devices_list, add_custom_device=True, existed_devices=None
 ):
     """Create schema for devices step."""
+    if existed_devices is None:
+        existed_devices = {}
     known_devices = {}
     devices = {}
     for dev_id, dev_host in discovered_devices.items():
@@ -1029,8 +1035,8 @@ def mergeDevicesList(localList: dict, cloudList: dict, addSubDevices=True) -> di
                         }
                     }
                     newList.update(dev_data)
-        except Exception as ex:
-            _LOGGER.debug(f"An error occurred while trying to pull sub-devices {ex}")
+        except (KeyError, ValueError, OSError) as ex:  # FIXED: W0718
+            _LOGGER.debug("An error occurred while trying to pull sub-devices %s", ex)
             continue
     return newList
 
@@ -1194,14 +1200,14 @@ async def validate_input(entry_runtime: HassLocalTuyaData, data):
             and existed_interface.connected
             and not existed_interface.is_connecting
         ):
-            interface = existed_interface._interface
+            interface = existed_interface.interface
             close = False
         else:
             # If 'auto' will be loop through supported protocols.
             for ver in SUPPORTED_PROTOCOL_VERSIONS:
                 try:
                     version = ver if auto_protocol else conf_protocol
-                    logger.info(f"Connecting with protocol version: {version}")
+                    logger.info("Connecting with protocol version: %s", version)
                     async with asyncio.timeout(5):
                         interface = await pytuya.connect(
                             data[CONF_HOST],
@@ -1233,7 +1239,7 @@ async def validate_input(entry_runtime: HassLocalTuyaData, data):
                     logger.error(f"Connection failed! {ex}")
                     error = ex
                     break
-                except Exception:
+                except RuntimeError:  # OSError above already catches TimeoutError
                     continue
                 finally:
                     if not auto_protocol and data.get(CONF_DEVICE_SLEEP_TIME, 0) > 0:
@@ -1262,7 +1268,12 @@ async def validate_input(entry_runtime: HassLocalTuyaData, data):
 
         except (ValueError, pytuya.parser.DecodeError) as ex:
             error = ex
-        except Exception as ex:
+        except (
+            OSError,
+            KeyError,
+            AttributeError,
+            TypeError,
+        ) as ex:  # FIXED: W0718/W0705
             logger.info(f"No DPS able to be detected {ex}")
             detected_dps = {}
 

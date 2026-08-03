@@ -2,6 +2,7 @@
 
 import asyncio
 import base64
+import binascii  # ADDED: for binascii.Error (base64 decode errors)
 import json
 import logging
 from enum import StrEnum
@@ -108,7 +109,7 @@ def rf_decode_button(base64_code):
         jstr = base64.b64decode(base64_code)
         jdata: dict = json.loads(jstr)
         return jdata
-    except Exception:
+    except (binascii.Error, ValueError, UnicodeDecodeError):  # FIXED: W0718
         return {}
 
 
@@ -244,7 +245,9 @@ class LocalTuyaRemote(LocalTuyaEntity, RemoteEntity):
                     await asyncio.wait_for(self._event.wait(), timeout)
                     await self.save_new_command(device, command, self._last_code)
                 except TimeoutError:
-                    raise ServiceValidationError(f"Timeout: Failed to learn: {command}")
+                    raise ServiceValidationError(
+                        f"Timeout: Failed to learn: {command}"
+                    ) from None  # FIXED: W0707
                 finally:
                     self._event.clear()
                     await self.send_signal(ControlMode.STUDY_EXIT, rf=is_rf)

@@ -130,6 +130,21 @@ class TuyaDevice(TuyaListener, ContextualLogger):
         return self._node_id and not self._fake_gateway
 
     @property
+    def interface(self):
+        """Return the underlying Tuya interface (or None)."""
+        return self._interface
+
+    @property
+    def task_connect(self):
+        """Return the in-flight connect task (or None)."""
+        return self._task_connect
+
+    async def update_dps(self, dps=None):
+        """Public wrapper for updating DPS on the device interface."""
+        if self._interface is not None:
+            await self._interface.update_dps(dps=dps, cid=self._node_id)
+
+    @property
     def is_sleep(self):
         """Return whether the device is sleep or not."""
         if (device_sleep := self._device_config.sleep_time) > 0:
@@ -195,7 +210,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
                         break
                     if not gateway.connected and gateway.is_connecting:
                         return await self.abort_connect()
-                    self._interface = gateway._interface
+                    self._interface = gateway.interface
                     if not self._interface:
                         break
                     if self._device_config.enable_debug:
@@ -251,7 +266,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
                 self.debug("Retrieving initial state")
                 status = await self._interface.status(cid=self._node_id)
                 if status is None:
-                    raise Exception("Failed to retrieve status")
+                    raise RuntimeError("Failed to retrieve status")  # FIXED: W0719
 
                 self.status_updated(status)
             except (UnicodeDecodeError, DecodeError) as e:
@@ -261,19 +276,22 @@ class TuyaDevice(TuyaListener, ContextualLogger):
             except asyncio.CancelledError:
                 await self.abort_connect()
                 self._task_connect = None
-            except Exception as e:
-                if not (self._fake_gateway and "Not found" in str(e)):
+            except (
+                OSError,
+                ValueError,
+                RuntimeError,
+            ) as e:  # FIXED: W0718/W0705 narrow + merge
+                if self._fake_gateway and "Not found" in str(e):
+                    self.warning(f"Failed to use {name} as gateway.")
+                    await self.abort_connect()
+                    update_localkey = True
+                else:
                     e = "Sub device is not connected" if self.is_subdevice else e
                     self.warning(f"Handshake with {host} failed due to: {e}")
                     await self.abort_connect()
                     if self.is_subdevice or "key" in str(e):
                         # TODO: Add exceptions for pytuya.
                         update_localkey = True
-            except Exception:
-                if self._fake_gateway:
-                    self.warning(f"Failed to use {name} as gateway.")
-                    await self.abort_connect()
-                    update_localkey = True
 
         # Connect and configure the entities, at this point the device should be ready to get commands.
         if self.connected and not self.is_closing:
@@ -342,8 +360,8 @@ class TuyaDevice(TuyaListener, ContextualLogger):
         """Ensure that the device is not still connecting; if it is, wait for it."""
         if not self.connected and self._task_connect:
             await self._task_connect
-        if not self.connected and self.gateway and self.gateway._task_connect:
-            await self.gateway._task_connect
+        if not self.connected and self.gateway and self.gateway.task_connect:
+            await self.gateway.task_connect
         if not self.connected:
             self.error(f"Not connected to device {self._device_config.name}")
 
@@ -388,7 +406,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
                 # NOTE: This will override the status if the BLE device fails to receive the signal.
                 if self.is_write_only:
                     self.status_updated(payload)
-            except (TimeoutError, Exception) as ex:
+            except (OSError, ValueError, RuntimeError) as ex:  # FIXED: W0718 narrow
                 self.debug(f"Failed to set values {payload} --> {ex}", force=True)
         elif not self.connected:
             self.error("Device is not connected.")

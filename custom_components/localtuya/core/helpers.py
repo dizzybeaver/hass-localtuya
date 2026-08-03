@@ -11,9 +11,8 @@ from typing import NamedTuple
 from homeassistant.const import CONF_ENTITIES, CONF_PLATFORM
 from homeassistant.util.yaml import dump, load_yaml
 
-import custom_components.localtuya.templates as templates_dir
-
 from ..const import CONF_LOCAL_KEY, CONF_NODE_ID
+from .. import templates as templates_dir
 from .ha_entities import gen_localtuya_entities
 
 JSON_TYPE = list | dict | str
@@ -26,6 +25,7 @@ _LOGGER = logging.getLogger(__name__)
 ###############################
 class templates:
 
+    @staticmethod
     def yaml_dump(config, fname: str | None = None) -> JSON_TYPE:
         """Save yaml config."""
         try:
@@ -34,17 +34,19 @@ class templates:
         except UnicodeDecodeError as exc:
             _LOGGER.error("Unable to save file %s: %s", fname, exc)
 
+    @staticmethod
     def list_templates():
         """Return the available templates files."""
-        dir = os.path.dirname(templates_dir.__file__)
+        template_dir = os.path.dirname(templates_dir.__file__)
         files = {}
-        for e in sorted(os.scandir(dir), key=lambda e: e.name):
+        for e in sorted(os.scandir(template_dir), key=lambda e: e.name):
             file: str = e.name.lower()
             if e.is_file() and (fnmatch(file, "*yaml") or fnmatch(file, "*yml")):
                 # fn = str(file).replace(".yaml", "").replace("_", " ")
                 files[e.name] = e.name
         return files
 
+    @staticmethod
     def import_config(filename):
         """Create a data that can be used as config in localtuya."""
         template_dir = os.path.dirname(templates_dir.__file__)
