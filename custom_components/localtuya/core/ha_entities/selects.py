@@ -9,7 +9,6 @@
 from .base import (
     DPCode,
     LocalTuyaEntity,
-    CONF_DEVICE_CLASS,
     EntityCategory,
     CLOUD_VALUE,
 )
@@ -625,7 +624,7 @@ SELECTS: dict[str, tuple[LocalTuyaEntity, ...]] = {
             name="Alarm Setting",
             entity_category=EntityCategory.CONFIG,
             custom_configs=localtuya_selector(
-                {"0": "Setting 1", "0": "Setting 2", "2": "Setting 3", "3": "Setting 4"}
+                {"0": "Setting 1", "1": "Setting 2", "2": "Setting 3", "3": "Setting 4"}
             ),
         ),
         LocalTuyaEntity(

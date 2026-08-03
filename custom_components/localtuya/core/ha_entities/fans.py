@@ -8,8 +8,6 @@
 from .base import (
     DPCode,
     LocalTuyaEntity,
-    CONF_DEVICE_CLASS,
-    EntityCategory,
     CLOUD_VALUE,
 )
 from homeassistant.components.fan import DIRECTION_FORWARD, DIRECTION_REVERSE

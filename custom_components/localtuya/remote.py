@@ -11,7 +11,6 @@ from .config_flow import col_to_select
 
 import voluptuous as vol
 from homeassistant.components.remote import (
-    ATTR_ACTIVITY,
     ATTR_COMMAND,
     ATTR_COMMAND_TYPE,
     ATTR_NUM_REPEATS,

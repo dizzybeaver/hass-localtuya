@@ -13,6 +13,9 @@ from homeassistant.const import (
     Platform,
 )
 
+# Re-exported HA constants consumed across the package.
+__all__ = ["CONF_ID"]
+
 DOMAIN = "localtuya"
 DATA_DISCOVERY = "discovery"
 

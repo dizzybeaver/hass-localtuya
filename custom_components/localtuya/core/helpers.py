@@ -2,7 +2,6 @@
 Helpers functions for HASS-LocalTuya.
 """
 
-import asyncio
 import logging
 import os.path
 from enum import Enum
@@ -114,3 +113,6 @@ def get_gateway_by_deviceid(device_id: str, cloud_data: dict) -> GATEWAY:
 #    Auto configure device    #
 ###############################
 from .ha_entities import gen_localtuya_entities
+
+# Re-exported for callers (e.g. config_flow imports these from helpers).
+__all__ = ["gen_localtuya_entities", "get_gateway_by_deviceid", "templates"]

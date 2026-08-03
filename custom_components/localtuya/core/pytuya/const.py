@@ -1,8 +1,7 @@
 """Constants for pytuya."""
 
-from enum import IntEnum, Enum
+from enum import IntEnum
 from dataclasses import dataclass
-from enum import Enum
 
 
 class MessagesFormat:

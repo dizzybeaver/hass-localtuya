@@ -9,10 +9,6 @@
 from homeassistant.components.climate import (
     HVACMode,
     HVACAction,
-    DEFAULT_MAX_TEMP,
-    DEFAULT_MIN_TEMP,
-    ATTR_MAX_TEMP,
-    ATTR_MIN_TEMP,
 )
 from homeassistant.const import CONF_TEMPERATURE_UNIT
 
@@ -105,7 +101,6 @@ MAP_CLIMATE_MODES = {
     "dehum": HVACMode.DRY,
     "wind": HVACMode.FAN_ONLY,
     "fan": HVACMode.FAN_ONLY,
-    "off": HVACMode.OFF,
     "0": HVACMode.COOL,
     "1": HVACMode.HEAT,
     "2": HVACMode.FAN_ONLY,

@@ -38,7 +38,6 @@ Credits
 import os
 import asyncio
 import errno
-import base64
 import binascii
 import hmac
 import json
@@ -57,11 +56,22 @@ from .const import (
     CMDType,
     SubdeviceState,
     Affix,
-    TuyaHeader,
     TuyaMessage,
     MessagePayload,
     MessagesFormat,
 )
+
+# LINTING EXCEPTION: TuyaHeader re-exported for consumers importing via pytuya package
+# Issue: F401 unused import
+# Cause: intentional re-export (parser.py imports from .const directly, but external
+#        code and type stubs expect TuyaHeader accessible at pytuya package root)
+# Alternative: remove and force all importers to use .const - rejected, breaks public API
+# Impact: removing would break any consumer importing pytuya.TuyaHeader
+# Resolution: keep until pytuya package API formally restricts, then revisit
+# Ticket: N/A (vendored upstream tinytuya pattern)
+# Approved: dizzybeaver (2026-08-02)
+# Re-evaluate: if upstream tinytuya drops TuyaHeader from package exports
+from .const import TuyaHeader as TuyaHeader  # noqa: F401
 
 version_tuple = (2025, 7, 0)
 version = version_string = __version__ = "%d.%d.%d" % version_tuple

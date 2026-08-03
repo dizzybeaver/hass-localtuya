@@ -25,7 +25,7 @@
 """
 
 import json
-from .base import LocalTuyaEntity, CONF_DPS_STRINGS, CLOUD_VALUE, DPType
+from .base import CONF_DPS_STRINGS, CLOUD_VALUE, DPType
 from enum import Enum
 from homeassistant.const import Platform, CONF_FRIENDLY_NAME, CONF_PLATFORM, CONF_ID
 

@@ -1,6 +1,5 @@
 """Platform to locally control Tuya-based climate devices."""
 
-import asyncio
 from enum import StrEnum
 import logging
 from functools import partial
@@ -31,7 +30,6 @@ from homeassistant.const import (
     PRECISION_WHOLE,
     UnitOfTemperature,
 )
-from homeassistant.util.unit_system import US_CUSTOMARY_SYSTEM
 from .entity import LocalTuyaEntity, async_setup_entry
 from .const import (
     CONF_CURRENT_TEMPERATURE_DP,
@@ -82,7 +80,6 @@ RENAME_PRESET_SETS = {  # Migrate to 3
     "Program": (PRESET_HOME),
     "Manual": (PRESET_NONE, "manual"),
     "Auto": "auto",
-    "Manual": "manual",
     "Smart": "smart",
     "Comfort": "comfortable",
     "ECO": "eco",

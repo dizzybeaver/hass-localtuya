@@ -6,7 +6,7 @@
     Modified by: xZetsubou
 """
 
-from .base import DPCode, LocalTuyaEntity, CONF_DEVICE_CLASS, EntityCategory
+from .base import DPCode, LocalTuyaEntity, EntityCategory
 
 BUTTONS: dict[str, tuple[LocalTuyaEntity, ...]] = {
     # Scene Switch
@@ -126,16 +126,6 @@ BUTTONS: dict[str, tuple[LocalTuyaEntity, ...]] = {
             id=DPCode.REMOTE_REGISTER,
             name="Pair Remote",
             icon="mdi:remote",
-            entity_category=EntityCategory.CONFIG,
-        ),
-    ),
-    # Smart Pet Feeder
-    # https://developer.tuya.com/en/docs/iot/categorycwwsq?id=Kaiuz2b6vydld
-    "cwwsq": (
-        LocalTuyaEntity(
-            id=DPCode.FACTORY_RESET,
-            name="Factory Reset",
-            icon="mdi:cog-counterclockwise",
             entity_category=EntityCategory.CONFIG,
         ),
     ),

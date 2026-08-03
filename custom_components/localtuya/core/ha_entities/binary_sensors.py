@@ -6,7 +6,7 @@
     Modified by: xZetsubou
 """
 
-from .base import DPCode, LocalTuyaEntity, CONF_DEVICE_CLASS, EntityCategory
+from .base import DPCode, LocalTuyaEntity, EntityCategory
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
 
 CONF_STATE_ON = "state_on"
@@ -309,15 +309,6 @@ BINARY_SENSORS: dict[str, tuple[LocalTuyaEntity, ...]] = {
             custom_configs=STATE_TRUE,
         ),
         TAMPER_BINARY_SENSOR,
-    ),
-    # Access Control
-    # https://developer.tuya.com/en/docs/iot/s?id=Kb0o2xhlkxbet
-    "mk": (
-        LocalTuyaEntity(
-            id=DPCode.CLOSED_OPENED_KIT,
-            device_class=BinarySensorDeviceClass.LOCK,
-            custom_configs=ON_AQAB,
-        ),
     ),
     # Access Control
     # https://developer.tuya.com/en/docs/iot/s?id=Kb0o2xhlkxbet

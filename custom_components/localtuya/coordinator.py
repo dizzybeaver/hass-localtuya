@@ -9,10 +9,10 @@ from datetime import timedelta
 from typing import Any, NamedTuple
 
 
-from homeassistant.core import HomeAssistant, CALLBACK_TYPE, callback, State
+from homeassistant.core import HomeAssistant, CALLBACK_TYPE, callback
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_ID, CONF_DEVICES, CONF_HOST, CONF_DEVICE_ID
-from homeassistant.helpers.event import async_track_time_interval, async_call_later
+from homeassistant.const import CONF_DEVICES, CONF_HOST, CONF_DEVICE_ID
+from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.dispatcher import (
     async_dispatcher_connect,
     dispatcher_send,

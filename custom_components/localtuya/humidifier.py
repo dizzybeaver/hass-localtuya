@@ -9,10 +9,8 @@ import voluptuous as vol
 from homeassistant.const import CONF_DEVICE_CLASS
 from homeassistant.components.humidifier import (
     DOMAIN,
-    HumidifierDeviceClass,
     DEVICE_CLASSES_SCHEMA,
     HumidifierEntity,
-    HumidifierEntityDescription,
     HumidifierEntityFeature,
 )
 from homeassistant.components.humidifier.const import (

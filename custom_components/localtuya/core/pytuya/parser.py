@@ -4,7 +4,7 @@ import logging
 import struct
 import hmac
 import binascii
-from hashlib import md5, sha256
+from hashlib import sha256
 from .const import Affix, MessagesFormat, TuyaHeader, TuyaMessage
 from .cipher import AESCipher
 

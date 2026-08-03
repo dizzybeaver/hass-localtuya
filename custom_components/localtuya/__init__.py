@@ -1,11 +1,8 @@
 """The LocalTuya integration."""
 
 import asyncio
-from dataclasses import dataclass
 import logging
 import time
-from datetime import timedelta
-from typing import Any, NamedTuple
 
 import homeassistant.helpers.config_validation as cv
 import homeassistant.helpers.device_registry as dr
@@ -27,7 +24,6 @@ from homeassistant.const import (
 )
 from homeassistant.core import Event, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers.event import async_track_time_interval
 
 from .coordinator import TuyaDevice, HassLocalTuyaData, TuyaCloudApi
 from .config_flow import ENTRIES_VERSION
