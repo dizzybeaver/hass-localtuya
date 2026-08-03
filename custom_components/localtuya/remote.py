@@ -1,34 +1,29 @@
 """Platform to present any Tuya DP as a remote."""
 
 import asyncio
-import json
 import base64
+import json
 import logging
-from functools import partial
 from enum import StrEnum
+from functools import partial
 from typing import Any, Iterable
-from .config_flow import col_to_select
 
 import voluptuous as vol
-from homeassistant.components.remote import (
-    ATTR_COMMAND,
-    ATTR_COMMAND_TYPE,
-    ATTR_NUM_REPEATS,
-    ATTR_DELAY_SECS,
-    ATTR_DEVICE,
-    ATTR_TIMEOUT,
-    DOMAIN,
-    RemoteEntity,
-    RemoteEntityFeature,
-)
 from homeassistant.components import persistent_notification
+from homeassistant.components.remote import (ATTR_COMMAND, ATTR_COMMAND_TYPE,
+                                             ATTR_DELAY_SECS, ATTR_DEVICE,
+                                             ATTR_NUM_REPEATS, ATTR_TIMEOUT,
+                                             DOMAIN, RemoteEntity,
+                                             RemoteEntityFeature)
 from homeassistant.const import STATE_OFF
-from homeassistant.core import ServiceCall, State, callback, HomeAssistant
-from homeassistant.exceptions import ServiceValidationError, NoEntitySpecifiedError
+from homeassistant.core import HomeAssistant, ServiceCall, State, callback
+from homeassistant.exceptions import (NoEntitySpecifiedError,
+                                      ServiceValidationError)
 from homeassistant.helpers.storage import Store
 
+from .config_flow import col_to_select
+from .const import CONF_KEY_STUDY_DP, CONF_RECEIVE_DP
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import CONF_RECEIVE_DP, CONF_KEY_STUDY_DP
 
 NSDP_CONTROL = "control"  # The control commands
 NSDP_TYPE = "type"  # The identifier of an IR library
@@ -360,7 +355,10 @@ class LocalTuyaRemote(LocalTuyaEntity, RemoteEntity):
         if command not in commands:
             commands.pop("rf", False)
             raise ServiceValidationError(
-                f"Couldn't find the command {command} for in {device} device. the available commands for this device is: {list(commands)}"
+                (
+                    f"Couldn't find the command {command} for in {device} device."
+                    f" the available commands for this device is: {list(commands)}"
+                )
             )
 
         # For now this only works if the command is in the list of commands of this device.
@@ -427,7 +425,8 @@ class LocalTuyaRemote(LocalTuyaEntity, RemoteEntity):
         if command not in commands:
             commands.pop("rf", False)
             raise ServiceValidationError(
-                f"Couldn't find the command {command} for in {device} device. the available commands for this device is: {list(commands)}"
+                f"Couldn't find the command {command} for in {device} device."
+                f" the available commands for this device is: {list(commands)}"
             )
 
         command = devices_data[device][command]

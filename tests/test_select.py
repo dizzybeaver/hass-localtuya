@@ -1,10 +1,8 @@
 """Test for localtuya."""
 
-from . import *
-from custom_components.localtuya.select import (
-    LocalTuyaSelect,
-    DOMAIN as PLATFORM_DOMAIN,
-)
+from custom_components.localtuya.select import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.select import LocalTuyaSelect
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {

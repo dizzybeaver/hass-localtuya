@@ -1,15 +1,15 @@
 """Test for localtuya."""
 
-from . import *
 import math
-from custom_components.localtuya.fan import LocalTuyaFan, DOMAIN as PLATFORM_DOMAIN
-from homeassistant.util.percentage import (
-    int_states_in_range,
-    ordered_list_item_to_percentage,
-    percentage_to_ordered_list_item,
-    percentage_to_ranged_value,
-    ranged_value_to_percentage,
-)
+
+from homeassistant.util.percentage import (ordered_list_item_to_percentage,
+                                           percentage_to_ordered_list_item,
+                                           percentage_to_ranged_value,
+                                           ranged_value_to_percentage)
+
+from custom_components.localtuya.fan import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.fan import LocalTuyaFan
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {
@@ -68,7 +68,7 @@ async def test_fan():
         entity_1.current_direction
         == status[CONFIG[DEVICE_NAME]["entities"][0]["fan_direction"]]
     )
-    assert entity_1.oscillating == True
+    assert entity_1.oscillating is True
 
     speed_range = entity_1._speed_range
     speed_percentage = ranged_value_to_percentage(

@@ -6,18 +6,13 @@
     Modified by: xZetsubou
 """
 
-from .base import (
-    DPCode,
-    LocalTuyaEntity,
-    CLOUD_VALUE,
-)
-from homeassistant.components.humidifier import (
-    HumidifierDeviceClass,
-    ATTR_MAX_HUMIDITY,
-    ATTR_MIN_HUMIDITY,
-    DEFAULT_MAX_HUMIDITY,
-    DEFAULT_MIN_HUMIDITY,
-)
+from homeassistant.components.humidifier import (ATTR_MAX_HUMIDITY,
+                                                 ATTR_MIN_HUMIDITY,
+                                                 DEFAULT_MAX_HUMIDITY,
+                                                 DEFAULT_MIN_HUMIDITY,
+                                                 HumidifierDeviceClass)
+
+from .base import CLOUD_VALUE, DPCode, LocalTuyaEntity
 
 CONF_HUMIDIFIER_SET_HUMIDITY_DP = "humidifier_set_humidity_dp"
 CONF_HUMIDIFIER_CURRENT_HUMIDITY_DP = "humidifier_current_humidity_dp"

@@ -6,16 +6,11 @@
     Modified by: xZetsubou
 """
 
-from .base import (
-    DPCode,
-    LocalTuyaEntity,
-    EntityCategory,
-    CLOUD_VALUE,
-)
+from ...select import CONF_OPTIONS as OPS_VALS
+from .base import CLOUD_VALUE, DPCode, EntityCategory, LocalTuyaEntity
 
 # from const.py this is temporarily.
 
-from ...select import CONF_OPTIONS as OPS_VALS
 
 
 def localtuya_selector(options):

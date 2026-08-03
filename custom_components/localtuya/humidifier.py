@@ -2,34 +2,24 @@
 
 import logging
 from functools import partial
-from .config_flow import col_to_select
-from homeassistant.helpers.selector import ObjectSelector
 
 import voluptuous as vol
+from homeassistant.components.humidifier import (DEVICE_CLASSES_SCHEMA, DOMAIN,
+                                                 HumidifierEntity,
+                                                 HumidifierEntityFeature)
+from homeassistant.components.humidifier.const import (ATTR_MAX_HUMIDITY,
+                                                       ATTR_MIN_HUMIDITY,
+                                                       DEFAULT_MAX_HUMIDITY,
+                                                       DEFAULT_MIN_HUMIDITY)
 from homeassistant.const import CONF_DEVICE_CLASS
-from homeassistant.components.humidifier import (
-    DOMAIN,
-    DEVICE_CLASSES_SCHEMA,
-    HumidifierEntity,
-    HumidifierEntityFeature,
-)
-from homeassistant.components.humidifier.const import (
-    ATTR_MAX_HUMIDITY,
-    ATTR_MIN_HUMIDITY,
-    DEFAULT_MAX_HUMIDITY,
-    DEFAULT_MIN_HUMIDITY,
-)
+from homeassistant.helpers.selector import ObjectSelector
 
-from .const import (
-    CONF_HUMIDIFIER_SET_HUMIDITY_DP,
-    CONF_HUMIDIFIER_CURRENT_HUMIDITY_DP,
-    CONF_HUMIDIFIER_MODE_DP,
-    CONF_HUMIDIFIER_AVAILABLE_MODES,
-    DictSelector,
-)
-
+from .config_flow import col_to_select
+from .const import (CONF_HUMIDIFIER_AVAILABLE_MODES,
+                    CONF_HUMIDIFIER_CURRENT_HUMIDITY_DP,
+                    CONF_HUMIDIFIER_MODE_DP, CONF_HUMIDIFIER_SET_HUMIDITY_DP,
+                    DictSelector)
 from .entity import LocalTuyaEntity, async_setup_entry
-
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -3,13 +3,13 @@
 import logging
 from functools import partial
 from typing import Any
-from .config_flow import col_to_select
 
 import voluptuous as vol
 from homeassistant.components.lock import DOMAIN, LockEntity
-from .entity import LocalTuyaEntity, async_setup_entry
 
+from .config_flow import col_to_select
 from .const import CONF_JAMMED_DP, CONF_LOCK_STATE_DP
+from .entity import LocalTuyaEntity, async_setup_entry
 
 _LOGGER = logging.getLogger(__name__)
 

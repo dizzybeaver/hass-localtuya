@@ -5,9 +5,10 @@
     Modified by: xZetsubou
 """
 
-from .base import DPCode, LocalTuyaEntity, CLOUD_VALUE
-from ...const import CONF_ALARM_SUPPORTED_STATES
 from homeassistant.components.alarm_control_panel import AlarmControlPanelState
+
+from ...const import CONF_ALARM_SUPPORTED_STATES
+from .base import CLOUD_VALUE, DPCode, LocalTuyaEntity
 
 MAP_ALARM_STATES = {
     "disarmed": AlarmControlPanelState.DISARMED,

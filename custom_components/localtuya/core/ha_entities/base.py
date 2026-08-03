@@ -1,14 +1,10 @@
-from enum import StrEnum
 from dataclasses import dataclass, field
+from enum import StrEnum
 from typing import Any
 
-from homeassistant.const import (
-    CONF_FRIENDLY_NAME,
-    CONF_ICON,
-    CONF_ENTITY_CATEGORY,
-    CONF_DEVICE_CLASS,
-    EntityCategory,
-)
+from homeassistant.const import (CONF_DEVICE_CLASS, CONF_ENTITY_CATEGORY,
+                                 CONF_FRIENDLY_NAME, CONF_ICON, EntityCategory)
+
 from ...const import CONF_DPS_STRINGS, CONF_STATE_CLASS
 
 # Re-exported for ha_entities consumers.

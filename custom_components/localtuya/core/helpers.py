@@ -8,11 +8,13 @@ from enum import Enum
 from fnmatch import fnmatch
 from typing import NamedTuple
 
-from homeassistant.util.yaml import load_yaml, dump
-from homeassistant.const import CONF_PLATFORM, CONF_ENTITIES
-
+from homeassistant.const import CONF_ENTITIES, CONF_PLATFORM
+from homeassistant.util.yaml import dump, load_yaml
 
 import custom_components.localtuya.templates as templates_dir
+
+from ..const import CONF_LOCAL_KEY, CONF_NODE_ID
+from .ha_entities import gen_localtuya_entities
 
 JSON_TYPE = list | dict | str
 
@@ -87,10 +89,8 @@ class templates:
 
 
 ################################
-##       config flows         ##
+#       config flows         ##
 ################################
-
-from ..const import CONF_LOCAL_KEY, CONF_NODE_ID
 
 GATEWAY = NamedTuple("Gateway", [("id", str), ("data", dict)])
 
@@ -112,7 +112,6 @@ def get_gateway_by_deviceid(device_id: str, cloud_data: dict) -> GATEWAY:
 ###############################
 #    Auto configure device    #
 ###############################
-from .ha_entities import gen_localtuya_entities
 
 # Re-exported for callers (e.g. config_flow imports these from helpers).
 __all__ = ["gen_localtuya_entities", "get_gateway_by_deviceid", "templates"]

@@ -6,24 +6,14 @@
     Modified by: xZetsubou
 """
 
-from homeassistant.components.water_heater import (
-    DEFAULT_MAX_TEMP,
-    DEFAULT_MIN_TEMP,
-)
+from homeassistant.components.water_heater import (DEFAULT_MAX_TEMP,
+                                                   DEFAULT_MIN_TEMP)
 from homeassistant.const import CONF_TEMPERATURE_UNIT
 
-from .base import DPCode, LocalTuyaEntity, CLOUD_VALUE
-from ...const import (
-    CONF_PRECISION,
-    CONF_TARGET_PRECISION,
-    CONF_CURRENT_TEMPERATURE_DP,
-    CONF_MAX_TEMP,
-    CONF_MIN_TEMP,
-    CONF_TARGET_TEMPERATURE_DP,
-    CONF_MODES,
-    CONF_MODE_DP,
-)
-
+from ...const import (CONF_CURRENT_TEMPERATURE_DP, CONF_MAX_TEMP,
+                      CONF_MIN_TEMP, CONF_MODE_DP, CONF_MODES, CONF_PRECISION,
+                      CONF_TARGET_PRECISION, CONF_TARGET_TEMPERATURE_DP)
+from .base import CLOUD_VALUE, DPCode, LocalTuyaEntity
 
 UNIT_C = "celsius"
 UNIT_F = "fahrenheit"

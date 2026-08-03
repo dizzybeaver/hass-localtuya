@@ -1,10 +1,8 @@
 """Test for localtuya."""
 
-from . import *
-from custom_components.localtuya.siren import (
-    LocalTuyaSiren,
-    DOMAIN as PLATFORM_DOMAIN,
-)
+from custom_components.localtuya.siren import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.siren import LocalTuyaSiren
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 STATE_ON = "activated"
 CONFIG = {

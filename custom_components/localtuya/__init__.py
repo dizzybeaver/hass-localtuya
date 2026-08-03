@@ -9,36 +9,19 @@ import homeassistant.helpers.device_registry as dr
 import homeassistant.helpers.entity_registry as er
 import voluptuous as vol
 from homeassistant.config_entries import ConfigEntry, ConfigEntryState
-from homeassistant.const import (
-    CONF_CLIENT_ID,
-    CONF_CLIENT_SECRET,
-    CONF_DEVICES,
-    CONF_DEVICE_ID,
-    CONF_ENTITIES,
-    CONF_HOST,
-    CONF_ID,
-    CONF_PLATFORM,
-    CONF_REGION,
-    EVENT_HOMEASSISTANT_STOP,
-    SERVICE_RELOAD,
-)
+from homeassistant.const import (CONF_CLIENT_ID, CONF_CLIENT_SECRET,
+                                 CONF_DEVICE_ID, CONF_DEVICES, CONF_ENTITIES,
+                                 CONF_HOST, CONF_ID, CONF_PLATFORM,
+                                 CONF_REGION, EVENT_HOMEASSISTANT_STOP,
+                                 SERVICE_RELOAD)
 from homeassistant.core import Event, HomeAssistant, ServiceCall, callback
 from homeassistant.exceptions import HomeAssistantError
 
-from .coordinator import TuyaDevice, HassLocalTuyaData, TuyaCloudApi
 from .config_flow import ENTRIES_VERSION
-from .const import (
-    ATTR_UPDATED_AT,
-    CONF_GATEWAY_ID,
-    CONF_NODE_ID,
-    CONF_NO_CLOUD,
-    CONF_PRODUCT_KEY,
-    CONF_USER_ID,
-    DATA_DISCOVERY,
-    DOMAIN,
-    PLATFORMS,
-)
-
+from .const import (ATTR_UPDATED_AT, CONF_GATEWAY_ID, CONF_NO_CLOUD,
+                    CONF_NODE_ID, CONF_PRODUCT_KEY, CONF_USER_ID,
+                    DATA_DISCOVERY, DOMAIN, PLATFORMS)
+from .coordinator import HassLocalTuyaData, TuyaCloudApi, TuyaDevice
 from .discovery import TuyaDiscovery
 
 _LOGGER = logging.getLogger(__name__)
@@ -236,24 +219,13 @@ async def async_migrate_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     # Update to version 4
     if config_entry.version <= 3:
         # Convert values and friendly name values to dict.
-        from .const import (
-            Platform,
-            CONF_OPTIONS,
-            CONF_HVAC_MODE_SET,
-            CONF_HVAC_ACTION_SET,
-            CONF_PRESET_SET,
-            CONF_SCENE_VALUES,
-            # Deprecated
-            CONF_SCENE_VALUES_FRIENDLY,
-            CONF_OPTIONS_FRIENDLY,
-            CONF_HVAC_ADD_OFF,
-        )
-        from .climate import (
-            RENAME_HVAC_MODE_SETS,
-            RENAME_ACTION_SETS,
-            RENAME_PRESET_SETS,
-            HVAC_OFF,
-        )
+        from .climate import (HVAC_OFF, RENAME_ACTION_SETS,
+                              RENAME_HVAC_MODE_SETS, RENAME_PRESET_SETS)
+        from .const import CONF_HVAC_ACTION_SET  # Deprecated
+        from .const import (CONF_HVAC_ADD_OFF, CONF_HVAC_MODE_SET,
+                            CONF_OPTIONS, CONF_OPTIONS_FRIENDLY,
+                            CONF_PRESET_SET, CONF_SCENE_VALUES,
+                            CONF_SCENE_VALUES_FRIENDLY, Platform)
 
         def convert_str_to_dict(list1: str, list2: str = ""):
             to_dict = {}
@@ -339,7 +311,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     no_cloud = entry.data.get(CONF_NO_CLOUD, True)
 
     if no_cloud:
-        _LOGGER.info(f"Cloud API account not configured.")
+        _LOGGER.info("Cloud API account not configured.")
     else:
         entry.async_create_background_task(
             hass, tuya_api.async_connect(), "localtuya-cloudAPI"
@@ -494,7 +466,7 @@ def _run_async_listen(hass: HomeAssistant, entry: ConfigEntry):
 
     async def device_state_changed(event: Event[dr.EventDeviceRegistryUpdatedData]):
         """Close connection if device disabled."""
-        if not "disabled_by" in event.data["changes"]:
+        if "disabled_by" not in event.data["changes"]:
             return
 
         device_registry = dr.async_get(hass).async_get(event.data["device_id"])

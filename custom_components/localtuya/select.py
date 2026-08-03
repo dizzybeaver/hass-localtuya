@@ -8,14 +8,9 @@ from homeassistant.components.select import DOMAIN, SelectEntity
 from homeassistant.const import CONF_DEVICE_CLASS, STATE_UNKNOWN
 from homeassistant.helpers import selector
 
+from .const import (CONF_DEFAULT_VALUE, CONF_OPTIONS, CONF_PASSIVE_ENTITY,
+                    CONF_RESTORE_ON_RECONNECT, DictSelector)
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import (
-    CONF_DEFAULT_VALUE,
-    CONF_OPTIONS,
-    CONF_PASSIVE_ENTITY,
-    CONF_RESTORE_ON_RECONNECT,
-    DictSelector,
-)
 
 
 def flow_schema(dps):

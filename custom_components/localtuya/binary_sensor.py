@@ -1,23 +1,18 @@
 """Platform to present any Tuya DP as a binary sensor."""
 
 import logging
-import voluptuous as vol
-
 from functools import partial
 
-from homeassistant.helpers.selector import NumberSelector, NumberSelectorConfig
-from homeassistant.helpers.event import async_call_later
-from homeassistant.core import callback, CALLBACK_TYPE
+import voluptuous as vol
+from homeassistant.components.binary_sensor import (DEVICE_CLASSES_SCHEMA,
+                                                    DOMAIN, BinarySensorEntity)
 from homeassistant.const import CONF_DEVICE_CLASS
-from homeassistant.components.binary_sensor import (
-    DEVICE_CLASSES_SCHEMA,
-    DOMAIN,
-    BinarySensorEntity,
-)
+from homeassistant.core import CALLBACK_TYPE, callback
+from homeassistant.helpers.event import async_call_later
+from homeassistant.helpers.selector import NumberSelector, NumberSelectorConfig
 
+from .const import CONF_RESET_TIMER, CONF_STATE_ON
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import CONF_STATE_ON, CONF_RESET_TIMER
-
 
 CONF_STATE_OFF = "state_off"
 

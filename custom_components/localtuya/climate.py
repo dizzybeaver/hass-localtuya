@@ -1,62 +1,34 @@
 """Platform to locally control Tuya-based climate devices."""
 
-from enum import StrEnum
 import logging
+from enum import StrEnum
 from functools import partial
-from .config_flow import col_to_select
-from homeassistant.helpers.selector import ObjectSelector
 
 import voluptuous as vol
-from homeassistant.components.climate import (
-    DEFAULT_MAX_TEMP,
-    DEFAULT_MIN_TEMP,
-    DOMAIN,
-    ClimateEntity,
-)
-from homeassistant.components.climate.const import (
-    HVACMode,
-    HVACAction,
-    PRESET_AWAY,
-    PRESET_ECO,
-    PRESET_HOME,
-    PRESET_NONE,
-    ClimateEntityFeature,
-)
-from homeassistant.const import (
-    ATTR_TEMPERATURE,
-    CONF_TEMPERATURE_UNIT,
-    PRECISION_HALVES,
-    PRECISION_TENTHS,
-    PRECISION_WHOLE,
-    UnitOfTemperature,
-)
+from homeassistant.components.climate import (DEFAULT_MAX_TEMP,
+                                              DEFAULT_MIN_TEMP, DOMAIN,
+                                              ClimateEntity)
+from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_ECO,
+                                                    PRESET_HOME, PRESET_NONE,
+                                                    ClimateEntityFeature,
+                                                    HVACAction, HVACMode)
+from homeassistant.const import (ATTR_TEMPERATURE, CONF_TEMPERATURE_UNIT,
+                                 PRECISION_HALVES, PRECISION_TENTHS,
+                                 PRECISION_WHOLE, UnitOfTemperature)
+from homeassistant.helpers.selector import ObjectSelector
+
+from .config_flow import col_to_select
+from .const import (CONF_CURRENT_TEMPERATURE_DP, CONF_ECO_DP, CONF_ECO_VALUE,
+                    CONF_FAN_SPEED_DP, CONF_FAN_SPEED_LIST,
+                    CONF_HEURISTIC_ACTION, CONF_HVAC_ACTION_DP,
+                    CONF_HVAC_ACTION_SET, CONF_HVAC_ADD_OFF, CONF_HVAC_MODE_DP,
+                    CONF_HVAC_MODE_SET, CONF_MAX_TEMP, CONF_MIN_TEMP,
+                    CONF_PRECISION, CONF_PRESET_DP, CONF_PRESET_SET,
+                    CONF_SWING_HORIZONTAL_DP, CONF_SWING_HORIZONTAL_MODES,
+                    CONF_SWING_MODE_DP, CONF_SWING_MODES,
+                    CONF_TARGET_PRECISION, CONF_TARGET_TEMPERATURE_DP,
+                    CONF_TEMPERATURE_STEP, DictSelector)
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import (
-    CONF_CURRENT_TEMPERATURE_DP,
-    CONF_ECO_DP,
-    CONF_ECO_VALUE,
-    CONF_HEURISTIC_ACTION,
-    CONF_HVAC_ACTION_DP,
-    CONF_HVAC_ACTION_SET,
-    CONF_HVAC_MODE_DP,
-    CONF_HVAC_MODE_SET,
-    CONF_PRECISION,
-    CONF_PRESET_DP,
-    CONF_PRESET_SET,
-    CONF_TARGET_PRECISION,
-    CONF_TARGET_TEMPERATURE_DP,
-    CONF_TEMPERATURE_STEP,
-    CONF_MIN_TEMP,
-    CONF_MAX_TEMP,
-    CONF_HVAC_ADD_OFF,
-    CONF_FAN_SPEED_DP,
-    CONF_FAN_SPEED_LIST,
-    CONF_SWING_MODE_DP,
-    CONF_SWING_MODES,
-    CONF_SWING_HORIZONTAL_DP,
-    CONF_SWING_HORIZONTAL_MODES,
-    DictSelector,
-)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -105,15 +77,17 @@ HVAC_ACTION_SETS = {
 class SupportedTemps(StrEnum):
     C = "celsius"
     F = "fahrenheit"
-    C_F = f"celsius/fahrenheit"
-    F_C = f"fahrenheit/celsius"
+    C_F = "celsius/fahrenheit"
+    F_C = "fahrenheit/celsius"
 
 
 SUPPORTED_TEMPERATURES = {
     UnitOfTemperature.CELSIUS: SupportedTemps.C,
     UnitOfTemperature.FAHRENHEIT: SupportedTemps.F,
-    f"Target Temperature: {UnitOfTemperature.CELSIUS} | Current Temperature {UnitOfTemperature.FAHRENHEIT}": SupportedTemps.C_F,
-    f"Current Temperature {UnitOfTemperature.CELSIUS} | Target Temperature: {UnitOfTemperature.FAHRENHEIT} ": SupportedTemps.F_C,
+    f"Target Temperature: {UnitOfTemperature.CELSIUS} | "
+    f"Current Temperature {UnitOfTemperature.FAHRENHEIT}": SupportedTemps.C_F,
+    f"Current Temperature {UnitOfTemperature.CELSIUS} | "
+    f"Target Temperature: {UnitOfTemperature.FAHRENHEIT} ": SupportedTemps.F_C,
 }
 SUPPORTED_PRECISIONS = [0.01, PRECISION_TENTHS, PRECISION_HALVES, PRECISION_WHOLE]
 

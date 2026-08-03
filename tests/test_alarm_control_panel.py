@@ -1,13 +1,12 @@
 """Test for localtuya."""
 
-from . import *
+from custom_components.localtuya.alarm_control_panel import \
+    DEFAULT_SUPPORTED_MODES
+from custom_components.localtuya.alarm_control_panel import \
+    DOMAIN as PLATFORM_DOMAIN
 from custom_components.localtuya.alarm_control_panel import (
-    LocalTuyaAlarmControlPanel,
-    DEFAULT_SUPPORTED_MODES,
-    DOMAIN as PLATFORM_DOMAIN,
-    TuyaMode,
-    AlarmControlPanelState,
-)
+    AlarmControlPanelState, LocalTuyaAlarmControlPanel, TuyaMode)
+from tests import DEVICE_NAME, HOST, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {
@@ -54,7 +53,7 @@ async def test_alarm_control_panel():
 
     assert type(entity_1) is LocalTuyaAlarmControlPanel
 
-    assert entity_1.alarm_state == None
+    assert entity_1.alarm_state is None
     device.status_updated({"1": TuyaMode.ARM})
     assert entity_1.alarm_state == AlarmControlPanelState.ARMED_AWAY
     device.status_updated({"1": TuyaMode.DISARMED})

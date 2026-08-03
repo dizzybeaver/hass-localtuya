@@ -6,10 +6,10 @@ based on tuya-convert.py from tuya-convert:
 Maintained by @xZetsubou
 """
 
-import os
 import asyncio
 import json
 import logging
+import os
 from hashlib import md5
 from socket import inet_aton
 

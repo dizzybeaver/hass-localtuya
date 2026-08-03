@@ -2,39 +2,24 @@
 
 import logging
 from functools import partial
-from .config_flow import col_to_select
-from homeassistant.helpers.selector import ObjectSelector
 
 import voluptuous as vol
-from homeassistant.components.water_heater import (
-    DEFAULT_MIN_TEMP,
-    DEFAULT_MAX_TEMP,
-    DOMAIN,
-    WaterHeaterEntity,
-    WaterHeaterEntityFeature,
-)
-from homeassistant.const import (
-    ATTR_TEMPERATURE,
-    CONF_TEMPERATURE_UNIT,
-    PRECISION_HALVES,
-    PRECISION_TENTHS,
-    PRECISION_WHOLE,
-    UnitOfTemperature,
-)
+from homeassistant.components.water_heater import (DEFAULT_MAX_TEMP,
+                                                   DEFAULT_MIN_TEMP, DOMAIN,
+                                                   WaterHeaterEntity,
+                                                   WaterHeaterEntityFeature)
+from homeassistant.const import (ATTR_TEMPERATURE, CONF_TEMPERATURE_UNIT,
+                                 PRECISION_HALVES, PRECISION_TENTHS,
+                                 PRECISION_WHOLE, UnitOfTemperature)
+from homeassistant.helpers.selector import ObjectSelector
+
+from .config_flow import col_to_select
+from .const import (CONF_CURRENT_TEMPERATURE_DP, CONF_MAX_TEMP, CONF_MIN_TEMP,
+                    CONF_MODE_DP, CONF_MODES, CONF_PRECISION,
+                    CONF_TARGET_PRECISION, CONF_TARGET_TEMPERATURE_DP,
+                    CONF_TARGET_TEMPERATURE_HIGH_DP,
+                    CONF_TARGET_TEMPERATURE_LOW_DP, DictSelector)
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import (
-    CONF_TARGET_TEMPERATURE_DP,
-    CONF_CURRENT_TEMPERATURE_DP,
-    CONF_MIN_TEMP,
-    CONF_MAX_TEMP,
-    CONF_PRECISION,
-    CONF_TARGET_PRECISION,
-    CONF_MODE_DP,
-    CONF_MODES,
-    CONF_TARGET_TEMPERATURE_LOW_DP,
-    CONF_TARGET_TEMPERATURE_HIGH_DP,
-    DictSelector,
-)
 
 _LOGGER = logging.getLogger(__name__)
 

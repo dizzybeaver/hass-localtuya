@@ -1,10 +1,8 @@
 """Test for localtuya."""
 
-from . import *
-from custom_components.localtuya.button import (
-    LocalTuyaButton,
-    DOMAIN as PLATFORM_DOMAIN,
-)
+from custom_components.localtuya.button import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.button import LocalTuyaButton
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {
@@ -36,4 +34,4 @@ async def test_button():
 
     device.status_updated(DPS_STATUS)
 
-    assert entity_1.state == None
+    assert entity_1.state is None

@@ -1,11 +1,10 @@
 """Test for localtuya."""
 
 from unittest.mock import AsyncMock
-from . import *
-from custom_components.localtuya.number import (
-    LocalTuyaNumber,
-    DOMAIN as PLATFORM_DOMAIN,
-)
+
+from custom_components.localtuya.number import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.number import LocalTuyaNumber
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {

@@ -2,36 +2,21 @@
 
 import logging
 from functools import partial
-from .config_flow import col_to_select
 
 import voluptuous as vol
-from homeassistant.components.vacuum import (
-    DOMAIN,
-    StateVacuumEntity,
-    VacuumActivity,
-    VacuumEntityFeature,
-)
+from homeassistant.components.vacuum import (DOMAIN, StateVacuumEntity,
+                                             VacuumActivity,
+                                             VacuumEntityFeature)
 
+from .config_flow import col_to_select
+from .const import (CONF_CLEAN_AREA_DP, CONF_CLEAN_RECORD_DP,
+                    CONF_CLEAN_TIME_DP, CONF_DOCKED_STATUS_VALUE,
+                    CONF_FAN_SPEED_DP, CONF_FAN_SPEEDS, CONF_FAULT_DP,
+                    CONF_IDLE_STATUS_VALUE, CONF_LOCATE_DP, CONF_MODE_DP,
+                    CONF_MODES, CONF_PAUSE_DP, CONF_PAUSED_STATE,
+                    CONF_POWERGO_DP, CONF_RETURN_MODE,
+                    CONF_RETURNING_STATUS_VALUE, CONF_STOP_STATUS)
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import (
-    CONF_CLEAN_AREA_DP,
-    CONF_CLEAN_RECORD_DP,
-    CONF_CLEAN_TIME_DP,
-    CONF_DOCKED_STATUS_VALUE,
-    CONF_FAN_SPEED_DP,
-    CONF_FAN_SPEEDS,
-    CONF_FAULT_DP,
-    CONF_IDLE_STATUS_VALUE,
-    CONF_LOCATE_DP,
-    CONF_MODE_DP,
-    CONF_MODES,
-    CONF_PAUSED_STATE,
-    CONF_POWERGO_DP,
-    CONF_RETURN_MODE,
-    CONF_RETURNING_STATUS_VALUE,
-    CONF_STOP_STATUS,
-    CONF_PAUSE_DP,
-)
 
 _LOGGER = logging.getLogger(__name__)
 

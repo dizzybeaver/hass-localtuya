@@ -2,29 +2,18 @@
 
 import logging
 from functools import partial
-from .config_flow import col_to_select
 
 import voluptuous as vol
-from homeassistant.components.switch import (
-    DOMAIN,
-    SwitchEntity,
-    SwitchDeviceClass,
-)
+from homeassistant.components.switch import (DOMAIN, SwitchDeviceClass,
+                                             SwitchEntity)
 from homeassistant.const import CONF_DEVICE_CLASS
 
+from .config_flow import col_to_select
+from .const import (ATTR_CURRENT, ATTR_CURRENT_CONSUMPTION, ATTR_STATE,
+                    ATTR_VOLTAGE, CONF_CURRENT, CONF_CURRENT_CONSUMPTION,
+                    CONF_DEFAULT_VALUE, CONF_PASSIVE_ENTITY,
+                    CONF_RESTORE_ON_RECONNECT, CONF_VOLTAGE)
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import (
-    ATTR_CURRENT,
-    ATTR_CURRENT_CONSUMPTION,
-    ATTR_STATE,
-    ATTR_VOLTAGE,
-    CONF_CURRENT,
-    CONF_CURRENT_CONSUMPTION,
-    CONF_DEFAULT_VALUE,
-    CONF_PASSIVE_ENTITY,
-    CONF_RESTORE_ON_RECONNECT,
-    CONF_VOLTAGE,
-)
 
 _LOGGER = logging.getLogger(__name__)
 

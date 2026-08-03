@@ -1,16 +1,10 @@
 """Test for localtuya."""
 
-from . import *
-from custom_components.localtuya.cover import (
-    LocalTuyaCover,
-    DOMAIN as PLATFORM_DOMAIN,
-    STATE_OPENING,
-    STATE_CLOSING,
-    STATE_STOPPED,
-    STATE_SET_CMD,
-    STATE_SET_OPENING,
-    STATE_SET_CLOSING,
-)
+from custom_components.localtuya.cover import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.cover import (STATE_SET_CLOSING,
+                                               STATE_SET_OPENING,
+                                               STATE_STOPPED, LocalTuyaCover)
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {
@@ -48,7 +42,7 @@ async def test_cover():
     status = DPS_STATUS.copy()
     device.status_updated(DPS_STATUS)
 
-    assert entity_1.is_closed == False
+    assert entity_1.is_closed is False
     assert entity_1.current_cover_position == status["2"]
 
     await entity_1.async_set_cover_position(position=0)
@@ -57,14 +51,14 @@ async def test_cover():
     assert entity_1._current_state == STATE_SET_OPENING
 
     device.status_updated({**status, **{"2": 100, "3": 100}})
-    assert entity_1.is_closed == False
+    assert entity_1.is_closed is False
     await entity_1.async_set_cover_position(position=100)
     assert entity_1._current_state == STATE_STOPPED
 
     # Position inverted.
     entity_1._position_inverted = True
     device.status_updated({})
-    assert entity_1.is_closed == True
+    assert entity_1.is_closed is True
 
     # await entity_1.async_set_cover_position(position=100)
     # assert entity_1._current_state == STATE_SET_CLOSING

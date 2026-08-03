@@ -7,18 +7,13 @@
 """
 
 from homeassistant.components.number import NumberDeviceClass
-from homeassistant.const import (
-    PERCENTAGE,
-    UnitOfTime,
-    UnitOfPower,
-    UnitOfTemperature,
-    CONF_UNIT_OF_MEASUREMENT,
-    UnitOfLength,
-    UnitOfElectricCurrent,
-)
+from homeassistant.const import (CONF_UNIT_OF_MEASUREMENT, PERCENTAGE,
+                                 UnitOfElectricCurrent, UnitOfLength,
+                                 UnitOfPower, UnitOfTemperature, UnitOfTime)
 
-from .base import DPCode, LocalTuyaEntity, EntityCategory, CLOUD_VALUE
-from ...const import CONF_MIN_VALUE, CONF_MAX_VALUE, CONF_STEPSIZE, CONF_SCALING
+from ...const import (CONF_MAX_VALUE, CONF_MIN_VALUE, CONF_SCALING,
+                      CONF_STEPSIZE)
+from .base import CLOUD_VALUE, DPCode, EntityCategory, LocalTuyaEntity
 
 
 def localtuya_numbers(_min, _max, _step=1, _scale=1, unit=None) -> dict:

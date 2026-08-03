@@ -35,32 +35,22 @@ Credits
     Several CLI tools and code for Tuya devices
 """
 
-import os
 import asyncio
-import errno
 import binascii
+import errno
 import hmac
 import json
 import logging
+import os
 import struct
 import time
 import weakref
 from abc import ABC, abstractmethod
-from typing import Self
 from hashlib import md5, sha256
-from .cipher import AESCipher
-
+from typing import Self
 
 from . import parser
-from .const import (
-    CMDType,
-    SubdeviceState,
-    Affix,
-    TuyaMessage,
-    MessagePayload,
-    MessagesFormat,
-)
-
+from .cipher import AESCipher
 # LINTING EXCEPTION: TuyaHeader re-exported for consumers importing via pytuya package
 # Issue: F401 unused import
 # Cause: intentional re-export (parser.py imports from .const directly, but external
@@ -71,7 +61,10 @@ from .const import (
 # Ticket: N/A (vendored upstream tinytuya pattern)
 # Approved: dizzybeaver (2026-08-02)
 # Re-evaluate: if upstream tinytuya drops TuyaHeader from package exports
+from .const import (Affix, CMDType, MessagePayload, MessagesFormat,
+                    SubdeviceState)
 from .const import TuyaHeader as TuyaHeader  # noqa: F401
+from .const import TuyaMessage
 
 version_tuple = (2025, 7, 0)
 version = version_string = __version__ = "%d.%d.%d" % version_tuple
@@ -401,7 +394,7 @@ class MessageDispatcher(ContextualLogger):
         elif msg.cmd == CMDType.LAN_EXT_STREAM:
             self._release_listener(self.SUB_DEVICE_QUERY_SEQNO, msg)
             if msg.payload:
-                self.debug(f"Got Sub-devices status update")
+                self.debug("Got Sub-devices status update")
                 self.callback_status_update(msg)
         else:
             if msg.cmd == CMDType.CONTROL_NEW or not msg.payload:
@@ -702,7 +695,7 @@ class TuyaProtocol(asyncio.Protocol, ContextualLogger):
 
     def clean_up_session(self):
         """Clean up session."""
-        self.debug(f"Cleaning up session.")
+        self.debug("Cleaning up session.")
         self.local_key = self.real_local_key
 
         if self.heartbeater:
@@ -1344,6 +1337,6 @@ async def connect(
     except (Exception, asyncio.CancelledError) as ex:
         raise ex
     except Exception:
-        raise Exception(f"The host refused to connect")
+        raise Exception("The host refused to connect")
 
     return protocol

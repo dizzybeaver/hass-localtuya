@@ -1,13 +1,9 @@
 """Test for localtuya."""
 
-from custom_components.localtuya.binary_sensor import (
-    DOMAIN as PLATFORM_DOMAIN,
-)
-from custom_components.localtuya.binary_sensor import (
-    LocalTuyaBinarySensor,
-)
-
-from . import *
+from custom_components.localtuya.binary_sensor import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.binary_sensor import LocalTuyaBinarySensor
+from tests import (DEVICE_CONFIG, DEVICE_NAME, dispatch_disconnect,
+                   get_entites, init)
 
 STATE_ON = "activated"
 CONFIG = {

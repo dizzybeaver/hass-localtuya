@@ -5,10 +5,7 @@
     Modified by: xZetsubou
 """
 
-from .base import (
-    DPCode,
-    LocalTuyaEntity,
-)
+from .base import DPCode, LocalTuyaEntity
 
 
 def localtuya_lock():

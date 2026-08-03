@@ -4,10 +4,11 @@ import logging
 from functools import partial
 
 import voluptuous as vol
-from homeassistant.components.siren import DOMAIN, SirenEntity, SirenEntityFeature
+from homeassistant.components.siren import (DOMAIN, SirenEntity,
+                                            SirenEntityFeature)
 
-from .entity import LocalTuyaEntity, async_setup_entry
 from .const import CONF_STATE_ON
+from .entity import LocalTuyaEntity, async_setup_entry
 
 _LOGGER = logging.getLogger(__name__)
 

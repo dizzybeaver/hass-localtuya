@@ -6,8 +6,9 @@
     Modified by: xZetsubou
 """
 
-from .base import DPCode, LocalTuyaEntity, EntityCategory
 from homeassistant.components.binary_sensor import BinarySensorDeviceClass
+
+from .base import DPCode, EntityCategory, LocalTuyaEntity
 
 CONF_STATE_ON = "state_on"
 

@@ -1,10 +1,8 @@
 """Test for localtuya."""
 
-from . import *
-from custom_components.localtuya.humidifier import (
-    LocalTuyaHumidifier,
-    DOMAIN as PLATFORM_DOMAIN,
-)
+from custom_components.localtuya.humidifier import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.humidifier import LocalTuyaHumidifier
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {
@@ -43,7 +41,7 @@ async def test_humidifier():
     entity_1, *_ = entities
     assert type(entity_1) is LocalTuyaHumidifier
 
-    assert entity_1.state == None
+    assert entity_1.state is None
 
     status = DPS_STATUS.copy()
     device.status_updated(status)

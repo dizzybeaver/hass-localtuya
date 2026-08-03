@@ -1,12 +1,13 @@
 """Tuya messages parser."""
 
+import binascii
+import hmac
 import logging
 import struct
-import hmac
-import binascii
 from hashlib import sha256
-from .const import Affix, MessagesFormat, TuyaHeader, TuyaMessage
+
 from .cipher import AESCipher
+from .const import Affix, MessagesFormat, TuyaHeader, TuyaMessage
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -178,7 +179,9 @@ def parse_header(data: bytes, logger=_LOGGER):
     elif data[:4] == Affix.prefix_55aa.bin:
         fmt = MessagesFormat.HEADER_55AA
     else:
-        err = f"Prefix Does not match! {prefix} known {set(p for p in Affix.prefixes)}"
+        err = (
+            f"Prefix Does not match! {data[:4]} known {set(p for p in Affix.prefixes)}"
+        )
         logger.error(err)
         raise DecodeError(err)
 
@@ -200,13 +203,18 @@ def parse_header(data: bytes, logger=_LOGGER):
         # seqno |= unknown << 32
         total_length = payload_len + header_len + len(Affix.suffix_6699.bin)
     else:
-        err = f"Prefix Does not match! {prefix} known {set(p for p in Affix.prefixes)}"
+        err = (
+            f"Prefix Does not match! {data[:4]} known {set(p for p in Affix.prefixes)}"
+        )
         logger.error(err)
         raise DecodeError(err)
 
     # sanity check. currently the max payload length is somewhere around 300 bytes
     if payload_len > 2000:
-        err = f"Header claims the packet size is over 2000 bytes!  It is most likely corrupt. Claimed size: {payload_len} bytes. fmt: {fmt} unpacked: {unpacked}"
+        err = (
+            f"Header claims the packet size is over 2000 bytes! It is most likely "
+            f"corrupt. Claimed size: {payload_len} bytes. fmt: {fmt} unpacked: {unpacked}"
+        )
         logger.error(err)
         raise DecodeError(err)
 

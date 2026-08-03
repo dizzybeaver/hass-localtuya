@@ -16,18 +16,15 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from custom_components.localtuya.config_flow import EmptyDpsList, validate_input
-from custom_components.localtuya.const import (
-    CONF_DEVICE_ID,
-    CONF_DPS_STRINGS,
-    CONF_ENABLE_DEBUG,
-    CONF_FRIENDLY_NAME,
-    CONF_HOST,
-    CONF_LOCAL_KEY,
-    CONF_MANUAL_DPS,
-    CONF_NODE_ID,
-    CONF_PROTOCOL_VERSION,
-)
+from custom_components.localtuya.config_flow import (EmptyDpsList,
+                                                     validate_input)
+from custom_components.localtuya.const import (CONF_DEVICE_ID,
+                                               CONF_DPS_STRINGS,
+                                               CONF_ENABLE_DEBUG,
+                                               CONF_FRIENDLY_NAME, CONF_HOST,
+                                               CONF_LOCAL_KEY, CONF_MANUAL_DPS,
+                                               CONF_NODE_ID,
+                                               CONF_PROTOCOL_VERSION)
 
 HOST = "1.2.3.4"
 DEV_ID = "eb36647qxeuhn4t6"

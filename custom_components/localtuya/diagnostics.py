@@ -7,12 +7,14 @@ import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_CLIENT_ID, CONF_CLIENT_SECRET, CONF_DEVICES
+from homeassistant.const import (CONF_CLIENT_ID, CONF_CLIENT_SECRET,
+                                 CONF_DEVICES)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceEntry
 
 from . import HassLocalTuyaData
-from .const import CONF_LOCAL_KEY, CONF_USER_ID, DOMAIN, CONF_NO_CLOUD, DATA_DISCOVERY
+from .const import (CONF_LOCAL_KEY, CONF_NO_CLOUD, CONF_USER_ID,
+                    DATA_DISCOVERY, DOMAIN)
 
 CLOUD_DEVICES = "cloud_devices"
 DEVICE_CONFIG = "device_config"

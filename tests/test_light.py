@@ -1,11 +1,8 @@
 """Test for localtuya."""
 
-from . import *
-from custom_components.localtuya.light import (
-    LocalTuyaLight,
-    DOMAIN as PLATFORM_DOMAIN,
-    ColorMode,
-)
+from custom_components.localtuya.light import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.light import LocalTuyaLight
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {

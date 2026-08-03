@@ -6,8 +6,9 @@
     Modified by: xZetsubou
 """
 
-from .base import DPCode, LocalTuyaEntity, EntityCategory
 from homeassistant.components.switch import SwitchDeviceClass
+
+from .base import DPCode, EntityCategory, LocalTuyaEntity
 
 CHILD_LOCK = (
     LocalTuyaEntity(

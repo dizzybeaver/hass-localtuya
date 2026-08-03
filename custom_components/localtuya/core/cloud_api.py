@@ -1,6 +1,5 @@
 """Class to perform requests to Tuya Cloud APIs."""
 
-import aiohttp
 import asyncio
 import hashlib
 import hmac
@@ -8,6 +7,7 @@ import json
 import logging
 import time
 
+import aiohttp
 
 DEVICES_UPDATE_INTERVAL = 300
 DEVICES_UPDATE_INTERVAL_FORCED = 10
@@ -191,7 +191,7 @@ class TuyaCloudApi:
             resp := await self.async_make_request("GET", "/v1.0/token?grant_type=1")
         ):
             self._token_expire_time = 0
-            return self._logger.debug(f"Failed to retrieve a valid token")
+            return self._logger.debug("Failed to retrieve a valid token")
 
         if not resp["success"]:
             self._token_expire_time = 0
@@ -213,14 +213,14 @@ class TuyaCloudApi:
             self.device_list
             and int(time.time()) - (self._last_devices_update + interval) < 0
         ):
-            return self._logger.debug(f"Devices has been updated a minutes ago.")
+            return self._logger.debug("Devices has been updated a minutes ago.")
 
         if not (
             resp := await self.async_make_request(
                 "GET", url=f"/v1.0/users/{self._user_id}/devices"
             )
         ):
-            return self._logger.debug(f"Failed to retrieve a devices list")
+            return self._logger.debug("Failed to retrieve a devices list")
 
         if not resp["success"]:
             return f"Error {resp['code']}: {resp['msg']}"
@@ -247,7 +247,7 @@ class TuyaCloudApi:
                 "GET", url=f"/v1.1/devices/{device_id}/specifications"
             )
         ):
-            return self._logger.debug(f"Failed to retrieve a device specifications")
+            return self._logger.debug("Failed to retrieve a device specifications")
 
         if not resp["success"]:
             return {}, f"Error {resp['code']}: {resp['msg']}"
@@ -262,7 +262,7 @@ class TuyaCloudApi:
                 "GET", url=f"/v2.0/cloud/thing/{device_id}/shadow/properties"
             )
         ):
-            return self._logger.debug(f"Failed to retrieve a device properties")
+            return self._logger.debug("Failed to retrieve a device properties")
 
         if not resp["success"]:
             return {}, f"Error {resp['code']}: {resp['msg']}"
@@ -279,7 +279,7 @@ class TuyaCloudApi:
                 "GET", url=f"/v2.0/cloud/thing/{device_id}/model"
             )
         ):
-            return self._logger.debug(f"Failed to retrieve a device data model")
+            return self._logger.debug("Failed to retrieve a device data model")
 
         if not resp["success"]:
             return {}, f"Error {resp['code']}: {resp['msg']}"

@@ -13,66 +13,32 @@ import homeassistant.helpers.entity_registry as er
 import voluptuous as vol
 from homeassistant import exceptions
 from homeassistant.config_entries import ConfigEntry, ConfigFlow, OptionsFlow
-from homeassistant.const import (
-    CONF_CLIENT_ID,
-    CONF_CLIENT_SECRET,
-    CONF_DEVICE_ID,
-    CONF_DEVICES,
-    CONF_ENTITIES,
-    CONF_ENTITY_CATEGORY,
-    CONF_FRIENDLY_NAME,
-    CONF_HOST,
-    CONF_ICON,
-    CONF_ID,
-    CONF_NAME,
-    CONF_PLATFORM,
-    CONF_REGION,
-    CONF_SCAN_INTERVAL,
-    CONF_USERNAME,
-    EntityCategory,
-)
+from homeassistant.const import (CONF_CLIENT_ID, CONF_CLIENT_SECRET,
+                                 CONF_DEVICE_ID, CONF_DEVICES, CONF_ENTITIES,
+                                 CONF_ENTITY_CATEGORY, CONF_FRIENDLY_NAME,
+                                 CONF_HOST, CONF_ICON, CONF_ID, CONF_NAME,
+                                 CONF_PLATFORM, CONF_REGION,
+                                 CONF_SCAN_INTERVAL, CONF_USERNAME,
+                                 EntityCategory)
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.selector import (
-    SelectOptionDict,
-    SelectSelector,
-    SelectSelectorConfig,
-    SelectSelectorMode,
-)
+from homeassistant.helpers.selector import (SelectOptionDict, SelectSelector,
+                                            SelectSelectorConfig,
+                                            SelectSelectorMode)
 
-from .const import (
-    ATTR_UPDATED_AT,
-    CONF_ADD_DEVICE,
-    CONF_CONFIGURE_CLOUD,
-    CONF_DEVICE_SLEEP_TIME,
-    CONF_DPS_STRINGS,
-    CONF_EDIT_DEVICE,
-    CONF_ENABLE_ADD_ENTITIES,
-    CONF_ENABLE_DEBUG,
-    CONF_GATEWAY_ID,
-    CONF_LOCAL_KEY,
-    CONF_MANUAL_DPS,
-    CONF_MODEL,
-    CONF_NO_CLOUD,
-    CONF_NODE_ID,
-    CONF_PRODUCT_KEY,
-    CONF_PRODUCT_NAME,
-    CONF_PROTOCOL_VERSION,
-    CONF_RESET_DPIDS,
-    CONF_TUYA_GWID,
-    CONF_TUYA_IP,
-    CONF_TUYA_VERSION,
-    CONF_USER_ID,
-    DATA_DISCOVERY,
-    DEFAULT_CATEGORIES,
-    DOMAIN,
-    ENTITY_CATEGORY,
-    PLATFORMS,
-    SUPPORTED_PROTOCOL_VERSIONS,
-)
+from .const import (ATTR_UPDATED_AT, CONF_ADD_DEVICE, CONF_CONFIGURE_CLOUD,
+                    CONF_DEVICE_SLEEP_TIME, CONF_DPS_STRINGS, CONF_EDIT_DEVICE,
+                    CONF_ENABLE_ADD_ENTITIES, CONF_ENABLE_DEBUG,
+                    CONF_GATEWAY_ID, CONF_LOCAL_KEY, CONF_MANUAL_DPS,
+                    CONF_MODEL, CONF_NO_CLOUD, CONF_NODE_ID, CONF_PRODUCT_KEY,
+                    CONF_PRODUCT_NAME, CONF_PROTOCOL_VERSION, CONF_RESET_DPIDS,
+                    CONF_TUYA_GWID, CONF_TUYA_IP, CONF_TUYA_VERSION,
+                    CONF_USER_ID, DATA_DISCOVERY, DEFAULT_CATEGORIES, DOMAIN,
+                    ENTITY_CATEGORY, PLATFORMS, SUPPORTED_PROTOCOL_VERSIONS)
 from .coordinator import HassLocalTuyaData
 from .core import pytuya
 from .core.cloud_api import TUYA_ENDPOINTS, TuyaCloudApi
-from .core.helpers import gen_localtuya_entities, get_gateway_by_deviceid, templates
+from .core.helpers import (gen_localtuya_entities, get_gateway_by_deviceid,
+                           templates)
 from .discovery import discover
 
 _LOGGER = logging.getLogger(__name__)

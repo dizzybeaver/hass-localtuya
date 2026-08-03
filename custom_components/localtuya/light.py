@@ -3,40 +3,26 @@
 import base64
 import logging
 import textwrap
-import homeassistant.util.color as color_util
-import voluptuous as vol
-
 from dataclasses import dataclass
 from functools import partial
-from homeassistant.helpers import selector
-from homeassistant.components.light import (
-    ATTR_BRIGHTNESS,
-    ATTR_COLOR_TEMP_KELVIN,
-    ATTR_EFFECT,
-    ATTR_HS_COLOR,
-    ATTR_WHITE,
-    ColorMode,
-    DOMAIN,
-    LightEntity,
-    LightEntityFeature,
-)
+
+import homeassistant.util.color as color_util
+import voluptuous as vol
+from homeassistant.components.light import (ATTR_BRIGHTNESS,
+                                            ATTR_COLOR_TEMP_KELVIN,
+                                            ATTR_EFFECT, ATTR_HS_COLOR,
+                                            ATTR_WHITE, DOMAIN, ColorMode,
+                                            LightEntity, LightEntityFeature)
 from homeassistant.const import CONF_BRIGHTNESS, CONF_COLOR_TEMP, CONF_SCENE
+from homeassistant.helpers import selector
 
 from .config_flow import col_to_select
+from .const import (CONF_BRIGHTNESS_LOWER, CONF_BRIGHTNESS_UPPER, CONF_COLOR,
+                    CONF_COLOR_MODE, CONF_COLOR_MODE_SET,
+                    CONF_COLOR_TEMP_MAX_KELVIN, CONF_COLOR_TEMP_MIN_KELVIN,
+                    CONF_COLOR_TEMP_REVERSE, CONF_MUSIC_MODE,
+                    CONF_SCENE_VALUES, DictSelector)
 from .entity import LocalTuyaEntity, async_setup_entry
-from .const import (
-    CONF_BRIGHTNESS_LOWER,
-    CONF_BRIGHTNESS_UPPER,
-    CONF_COLOR,
-    CONF_COLOR_MODE,
-    CONF_COLOR_MODE_SET,
-    CONF_COLOR_TEMP_MAX_KELVIN,
-    CONF_COLOR_TEMP_MIN_KELVIN,
-    CONF_COLOR_TEMP_REVERSE,
-    CONF_MUSIC_MODE,
-    CONF_SCENE_VALUES,
-    DictSelector,
-)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -251,7 +237,10 @@ class LocalTuyaLight(LocalTuyaEntity, LightEntity):
         self.__from_color = self.__from_color_common
 
     def connection_made(self):
-        """The connection has made with the device and status retrieved, Configure the entity based on its reserved status."""
+        """The connection has made with the device and status retrieved,
+
+        Configure the entity based on its reserved status.
+        """
         super().connection_made()
         is_write_only = self._write_only
 
@@ -322,7 +311,7 @@ class LocalTuyaLight(LocalTuyaEntity, LightEntity):
             return self._hs
         if (
             ColorMode.HS in self.supported_color_modes
-            and not ColorMode.COLOR_TEMP in self.supported_color_modes
+            and ColorMode.COLOR_TEMP not in self.supported_color_modes
         ):
             return [0, 0]
         return None

@@ -1,6 +1,7 @@
 """Tuya Device API"""
 
 from __future__ import annotations
+
 import asyncio
 import errno
 import logging
@@ -8,40 +9,22 @@ import time
 from datetime import timedelta
 from typing import Any, NamedTuple
 
-
-from homeassistant.core import HomeAssistant, CALLBACK_TYPE, callback
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_DEVICES, CONF_HOST, CONF_DEVICE_ID
+from homeassistant.const import CONF_DEVICE_ID, CONF_DEVICES, CONF_HOST
+from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
+from homeassistant.helpers.dispatcher import (async_dispatcher_connect,
+                                              dispatcher_send)
 from homeassistant.helpers.event import async_track_time_interval
-from homeassistant.helpers.dispatcher import (
-    async_dispatcher_connect,
-    dispatcher_send,
-)
 
+from .const import (ATTR_UPDATED_AT, CONF_GATEWAY_ID, CONF_LOCAL_KEY,
+                    CONF_NO_CLOUD, CONF_NODE_ID, CONF_TUYA_IP, DATA_DISCOVERY,
+                    DOMAIN, RESTORE_STATES, DeviceConfig)
 from .core.cloud_api import TuyaCloudApi
-from .core.pytuya import (
-    ContextualLogger,
-    HEARTBEAT_INTERVAL,
-    TIMEOUT_CONNECT,
-    SubdeviceState,
-    TuyaListener,
-    TuyaProtocol,
-    connect as pytuya_connect,
-)
+from .core.pytuya import (HEARTBEAT_INTERVAL, TIMEOUT_CONNECT,
+                          ContextualLogger, SubdeviceState, TuyaListener,
+                          TuyaProtocol)
+from .core.pytuya import connect as pytuya_connect
 from .core.pytuya.parser import DecodeError
-
-from .const import (
-    ATTR_UPDATED_AT,
-    CONF_GATEWAY_ID,
-    CONF_LOCAL_KEY,
-    CONF_NODE_ID,
-    CONF_NO_CLOUD,
-    CONF_TUYA_IP,
-    DATA_DISCOVERY,
-    DOMAIN,
-    DeviceConfig,
-    RESTORE_STATES,
-)
 
 _LOGGER = logging.getLogger(__name__)
 RECONNECT_INTERVAL = timedelta(seconds=5)
@@ -395,7 +378,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
             except (TimeoutError, Exception) as ex:
                 self.debug(f"Failed to set values {payload} --> {ex}", force=True)
         elif not self.connected:
-            self.error(f"Device is not connected.")
+            self.error("Device is not connected.")
 
     async def set_dp(self, state, dp_index):
         """Change value of a DP of the Tuya device."""
@@ -509,7 +492,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
         if self._entry.data.get(CONF_NO_CLOUD, True):
             return self.info("Ensure that localkey hasn't changed and it's correct")
 
-        self.info(f"Trying to update local-key...")
+        self.info("Trying to update local-key...")
         dev_id = self._device_config.id
         cloud_api = self._hass_entry.cloud_data
         await cloud_api.async_get_devices_list(force_update=True)
@@ -544,7 +527,7 @@ class TuyaDevice(TuyaListener, ContextualLogger):
             new_data[CONF_DEVICES][dev_id][CONF_LOCAL_KEY] = self.local_key
             new_data[ATTR_UPDATED_AT] = str(int(time.time() * 1000))
             self.hass.config_entries.async_update_entry(self._entry, data=new_data)
-            self.info(f"Local-key has been updated")
+            self.info("Local-key has been updated")
 
     def filter_subdevices(self):
         """Remove closed subdevices that are closed."""
@@ -571,7 +554,8 @@ class TuyaDevice(TuyaListener, ContextualLogger):
         event_device_dp_triggered = "device_dp_triggered"
 
         if self._interface and old_status and new_status:
-            # A massive number of events that can be triggered when some devices update too quickly such as temp sensors,
+            # A massive number of events that can be triggered when some devices update
+            # too quickly such as temp sensors,
             # - We want only to update if status changed except for 1 DP trigger, for scene controls.
             if len(self._interface.dispatched_dps) == 1:
                 dp, value = next(iter(self._interface.dispatched_dps.items()))

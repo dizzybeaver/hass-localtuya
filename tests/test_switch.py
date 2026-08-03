@@ -1,8 +1,10 @@
 """Test for localtuya."""
 
-from . import *
 from homeassistant.const import EntityCategory
-from custom_components.localtuya.switch import LocalTuyaSwitch, DOMAIN as SWITCH_DOMAIN
+
+from custom_components.localtuya.switch import DOMAIN as SWITCH_DOMAIN
+from custom_components.localtuya.switch import LocalTuyaSwitch
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {
     DEVICE_NAME: {
@@ -41,7 +43,7 @@ async def test_switch():
     entity_sw1, entity_sw2, *_ = entities
     assert type(entity_sw1) is LocalTuyaSwitch
 
-    assert entity_sw1.state == None
+    assert entity_sw1.state is None
     device.status_updated(DPS_STATUS)
 
     assert entity_sw1.state == "on"

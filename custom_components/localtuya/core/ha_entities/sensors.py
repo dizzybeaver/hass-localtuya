@@ -6,33 +6,15 @@
     Modified by: xZetsubou
 """
 
-from homeassistant.components.sensor import SensorStateClass, SensorDeviceClass
-from homeassistant.const import (
-    PERCENTAGE,
-    UnitOfTime,
-    UnitOfPower,
-    PERCENTAGE,
-    UnitOfElectricCurrent,
-    UnitOfElectricPotential,
-    UnitOfTime,
-    CONF_UNIT_OF_MEASUREMENT,
-    UnitOfTemperature,
-    UnitOfEnergy,
-    UnitOfVolume,
-    UnitOfElectricPotential,
-    UnitOfMass,
-    DEGREE,
-    LIGHT_LUX,
-    UnitOfLength,
-)
+from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
+from homeassistant.const import (CONF_UNIT_OF_MEASUREMENT, DEGREE, LIGHT_LUX,
+                                 PERCENTAGE, UnitOfElectricCurrent,
+                                 UnitOfElectricPotential, UnitOfEnergy,
+                                 UnitOfLength, UnitOfMass, UnitOfPower,
+                                 UnitOfTemperature, UnitOfTime, UnitOfVolume)
 
-from .base import (
-    DPCode,
-    LocalTuyaEntity,
-    EntityCategory,
-    CLOUD_VALUE,
-)
 from ...const import CONF_SCALING as SCALE_FACTOR
+from .base import CLOUD_VALUE, DPCode, EntityCategory, LocalTuyaEntity
 
 
 def localtuya_sensor(unit_of_measurement=None, scale_factor: float = 1) -> dict:
@@ -1212,7 +1194,7 @@ SENSORS: dict[str, tuple[LocalTuyaEntity, ...]] = {
             state_class=SensorStateClass.TOTAL_INCREASING,
             custom_configs=localtuya_sensor(UnitOfEnergy.KILO_WATT_HOUR, 0.01),
         ),
-        ## PHASE X Are probably encrypted values. since it duplicated it probably raw dict data.
+        # PHASE X Are probably encrypted values. since it duplicated it probably raw dict data.
         LocalTuyaEntity(
             id=DPCode.PHASE_A,
             name="Phase A",
@@ -1228,7 +1210,7 @@ SENSORS: dict[str, tuple[LocalTuyaEntity, ...]] = {
             name="Phase C",
             entity_category=EntityCategory.DIAGNOSTIC,
         ),
-        ## PHASE X Are probably encrypted values. since it duplicated it probably raw dict data.
+        # PHASE X Are probably encrypted values. since it duplicated it probably raw dict data.
         LocalTuyaEntity(
             id=DPCode.POWER_A,
             name="Power A",

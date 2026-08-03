@@ -8,7 +8,6 @@
 
 from .base import DPCode, LocalTuyaEntity
 
-
 CONF_RECEIVE_DP = "receive_dp"
 
 

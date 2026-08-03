@@ -1,13 +1,9 @@
 """Test for localtuya."""
 
-from . import *
-import copy
-from custom_components.localtuya.climate import (
-    LocalTuyaClimate,
-    HVACAction,
-    HVACMode,
-    DOMAIN as PLATFORM_DOMAIN,
-)
+from custom_components.localtuya.climate import DOMAIN as PLATFORM_DOMAIN
+from custom_components.localtuya.climate import (HVACAction, HVACMode,
+                                                 LocalTuyaClimate)
+from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 FAN_SPEED_LIST = ["auto", "low", "middle", "high"]
 FAN_SPEED_DICT = {"1": "Silent", "2": "Low", "3": "Middle", "4": "High"}
@@ -88,18 +84,18 @@ async def test_climate():
     entity_1, entity_2, *_ = entities
     assert type(entity_1) is LocalTuyaClimate
 
-    assert entity_1._is_on == None
+    assert entity_1._is_on is None
 
     status = {**DPS_STATUS, **{"1": False}}
     device.status_updated(status)
     assert type(entity_1._state_on) is bool
 
-    assert entity_1._is_on == False
+    assert entity_1._is_on is False
     assert entity_1.hvac_action == HVACAction.OFF
     assert entity_1.hvac_mode == HVACMode.OFF
 
     device.status_updated(DPS_STATUS)
-    assert entity_1._is_on == True
+    assert entity_1._is_on is True
     assert entity_1.hvac_action == HVACAction.IDLE
     assert entity_1.hvac_mode == HVACMode.COOL
     assert entity_1.fan_modes == FAN_SPEED_LIST

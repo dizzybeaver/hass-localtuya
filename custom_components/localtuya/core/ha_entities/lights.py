@@ -7,17 +7,13 @@
 """
 
 from typing import Any
-from .base import DPCode, LocalTuyaEntity, EntityCategory, CLOUD_VALUE
+
 from homeassistant.const import CONF_BRIGHTNESS
 
-from ...const import (
-    CONF_BRIGHTNESS_LOWER,
-    CONF_BRIGHTNESS_UPPER,
-    CONF_COLOR_TEMP_MIN_KELVIN,
-    CONF_COLOR_TEMP_MAX_KELVIN,
-    CONF_COLOR_TEMP_REVERSE,
-    CONF_MUSIC_MODE,
-)
+from ...const import (CONF_BRIGHTNESS_LOWER, CONF_BRIGHTNESS_UPPER,
+                      CONF_COLOR_TEMP_MAX_KELVIN, CONF_COLOR_TEMP_MIN_KELVIN,
+                      CONF_COLOR_TEMP_REVERSE, CONF_MUSIC_MODE)
+from .base import CLOUD_VALUE, DPCode, EntityCategory, LocalTuyaEntity
 
 
 def localtuya_light(
