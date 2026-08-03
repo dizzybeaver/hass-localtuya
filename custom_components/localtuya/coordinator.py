@@ -12,17 +12,30 @@ from typing import Any, NamedTuple
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_DEVICE_ID, CONF_DEVICES, CONF_HOST
 from homeassistant.core import CALLBACK_TYPE, HomeAssistant, callback
-from homeassistant.helpers.dispatcher import (async_dispatcher_connect,
-                                              dispatcher_send)
+from homeassistant.helpers.dispatcher import async_dispatcher_connect, dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
 
-from .const import (ATTR_UPDATED_AT, CONF_GATEWAY_ID, CONF_LOCAL_KEY,
-                    CONF_NO_CLOUD, CONF_NODE_ID, CONF_TUYA_IP, DATA_DISCOVERY,
-                    DOMAIN, RESTORE_STATES, DeviceConfig)
+from .const import (
+    ATTR_UPDATED_AT,
+    CONF_GATEWAY_ID,
+    CONF_LOCAL_KEY,
+    CONF_NO_CLOUD,
+    CONF_NODE_ID,
+    CONF_TUYA_IP,
+    DATA_DISCOVERY,
+    DOMAIN,
+    RESTORE_STATES,
+    DeviceConfig,
+)
 from .core.cloud_api import TuyaCloudApi
-from .core.pytuya import (HEARTBEAT_INTERVAL, TIMEOUT_CONNECT,
-                          ContextualLogger, SubdeviceState, TuyaListener,
-                          TuyaProtocol)
+from .core.pytuya import (
+    HEARTBEAT_INTERVAL,
+    TIMEOUT_CONNECT,
+    ContextualLogger,
+    SubdeviceState,
+    TuyaListener,
+    TuyaProtocol,
+)
 from .core.pytuya import connect as pytuya_connect
 from .core.pytuya.parser import DecodeError
 

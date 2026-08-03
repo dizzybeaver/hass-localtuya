@@ -6,11 +6,13 @@
     Modified by: xZetsubou
 """
 
-from homeassistant.components.humidifier import (ATTR_MAX_HUMIDITY,
-                                                 ATTR_MIN_HUMIDITY,
-                                                 DEFAULT_MAX_HUMIDITY,
-                                                 DEFAULT_MIN_HUMIDITY,
-                                                 HumidifierDeviceClass)
+from homeassistant.components.humidifier import (
+    ATTR_MAX_HUMIDITY,
+    ATTR_MIN_HUMIDITY,
+    DEFAULT_MAX_HUMIDITY,
+    DEFAULT_MIN_HUMIDITY,
+    HumidifierDeviceClass,
+)
 
 from .base import CLOUD_VALUE, DPCode, LocalTuyaEntity
 

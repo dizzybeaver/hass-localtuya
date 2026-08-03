@@ -4,8 +4,11 @@ import logging
 from functools import partial
 
 import voluptuous as vol
-from homeassistant.components.binary_sensor import (DEVICE_CLASSES_SCHEMA,
-                                                    DOMAIN, BinarySensorEntity)
+from homeassistant.components.binary_sensor import (
+    DEVICE_CLASSES_SCHEMA,
+    DOMAIN,
+    BinarySensorEntity,
+)
 from homeassistant.const import CONF_DEVICE_CLASS
 from homeassistant.core import CALLBACK_TYPE, callback
 from homeassistant.helpers.event import async_call_later

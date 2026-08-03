@@ -39,8 +39,7 @@ import json
 import logging
 from enum import Enum
 
-from homeassistant.const import (CONF_FRIENDLY_NAME, CONF_ID, CONF_PLATFORM,
-                                 Platform)
+from homeassistant.const import CONF_FRIENDLY_NAME, CONF_ID, CONF_PLATFORM, Platform
 
 # Supported files
 from .alarm_control_panels import ALARMS  # not added yet

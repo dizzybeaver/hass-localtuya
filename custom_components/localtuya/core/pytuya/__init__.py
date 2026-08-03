@@ -51,6 +51,7 @@ from typing import Self
 
 from . import parser
 from .cipher import AESCipher
+
 # LINTING EXCEPTION: TuyaHeader re-exported for consumers importing via pytuya package
 # Issue: F401 unused import
 # Cause: intentional re-export (parser.py imports from .const directly, but external
@@ -61,10 +62,15 @@ from .cipher import AESCipher
 # Ticket: N/A (vendored upstream tinytuya pattern)
 # Approved: dizzybeaver (2026-08-02)
 # Re-evaluate: if upstream tinytuya drops TuyaHeader from package exports
-from .const import (Affix, CMDType, MessagePayload, MessagesFormat,
-                    SubdeviceState)
+from .const import (
+    Affix,
+    CMDType,
+    MessagePayload,
+    MessagesFormat,
+    SubdeviceState,
+    TuyaMessage,
+)
 from .const import TuyaHeader as TuyaHeader  # noqa: F401
-from .const import TuyaMessage
 
 version_tuple = (2025, 7, 0)
 version = version_string = __version__ = "%d.%d.%d" % version_tuple

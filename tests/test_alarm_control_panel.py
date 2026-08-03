@@ -1,11 +1,12 @@
 """Test for localtuya."""
 
-from custom_components.localtuya.alarm_control_panel import \
-    DEFAULT_SUPPORTED_MODES
-from custom_components.localtuya.alarm_control_panel import \
-    DOMAIN as PLATFORM_DOMAIN
 from custom_components.localtuya.alarm_control_panel import (
-    AlarmControlPanelState, LocalTuyaAlarmControlPanel, TuyaMode)
+    DEFAULT_SUPPORTED_MODES,
+    AlarmControlPanelState,
+    LocalTuyaAlarmControlPanel,
+    TuyaMode,
+)
+from custom_components.localtuya.alarm_control_panel import DOMAIN as PLATFORM_DOMAIN
 from tests import DEVICE_NAME, HOST, get_entites, init
 
 CONFIG = {

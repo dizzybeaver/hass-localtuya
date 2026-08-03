@@ -3,9 +3,16 @@
 from dataclasses import dataclass
 from typing import Any
 
-from homeassistant.const import (CONF_DEVICE_ID, CONF_ENTITIES,
-                                 CONF_FRIENDLY_NAME, CONF_HOST, CONF_ID,
-                                 CONF_SCAN_INTERVAL, EntityCategory, Platform)
+from homeassistant.const import (
+    CONF_DEVICE_ID,
+    CONF_ENTITIES,
+    CONF_FRIENDLY_NAME,
+    CONF_HOST,
+    CONF_ID,
+    CONF_SCAN_INTERVAL,
+    EntityCategory,
+    Platform,
+)
 
 # Re-exported HA constants consumed across the package.
 __all__ = ["CONF_ID"]

@@ -5,29 +5,58 @@ from enum import StrEnum
 from functools import partial
 
 import voluptuous as vol
-from homeassistant.components.climate import (DEFAULT_MAX_TEMP,
-                                              DEFAULT_MIN_TEMP, DOMAIN,
-                                              ClimateEntity)
-from homeassistant.components.climate.const import (PRESET_AWAY, PRESET_ECO,
-                                                    PRESET_HOME, PRESET_NONE,
-                                                    ClimateEntityFeature,
-                                                    HVACAction, HVACMode)
-from homeassistant.const import (ATTR_TEMPERATURE, CONF_TEMPERATURE_UNIT,
-                                 PRECISION_HALVES, PRECISION_TENTHS,
-                                 PRECISION_WHOLE, UnitOfTemperature)
+from homeassistant.components.climate import (
+    DEFAULT_MAX_TEMP,
+    DEFAULT_MIN_TEMP,
+    DOMAIN,
+    ClimateEntity,
+)
+from homeassistant.components.climate.const import (
+    PRESET_AWAY,
+    PRESET_ECO,
+    PRESET_HOME,
+    PRESET_NONE,
+    ClimateEntityFeature,
+    HVACAction,
+    HVACMode,
+)
+from homeassistant.const import (
+    ATTR_TEMPERATURE,
+    CONF_TEMPERATURE_UNIT,
+    PRECISION_HALVES,
+    PRECISION_TENTHS,
+    PRECISION_WHOLE,
+    UnitOfTemperature,
+)
 from homeassistant.helpers.selector import ObjectSelector
 
 from .config_flow import col_to_select
-from .const import (CONF_CURRENT_TEMPERATURE_DP, CONF_ECO_DP, CONF_ECO_VALUE,
-                    CONF_FAN_SPEED_DP, CONF_FAN_SPEED_LIST,
-                    CONF_HEURISTIC_ACTION, CONF_HVAC_ACTION_DP,
-                    CONF_HVAC_ACTION_SET, CONF_HVAC_ADD_OFF, CONF_HVAC_MODE_DP,
-                    CONF_HVAC_MODE_SET, CONF_MAX_TEMP, CONF_MIN_TEMP,
-                    CONF_PRECISION, CONF_PRESET_DP, CONF_PRESET_SET,
-                    CONF_SWING_HORIZONTAL_DP, CONF_SWING_HORIZONTAL_MODES,
-                    CONF_SWING_MODE_DP, CONF_SWING_MODES,
-                    CONF_TARGET_PRECISION, CONF_TARGET_TEMPERATURE_DP,
-                    CONF_TEMPERATURE_STEP, DictSelector)
+from .const import (
+    CONF_CURRENT_TEMPERATURE_DP,
+    CONF_ECO_DP,
+    CONF_ECO_VALUE,
+    CONF_FAN_SPEED_DP,
+    CONF_FAN_SPEED_LIST,
+    CONF_HEURISTIC_ACTION,
+    CONF_HVAC_ACTION_DP,
+    CONF_HVAC_ACTION_SET,
+    CONF_HVAC_ADD_OFF,
+    CONF_HVAC_MODE_DP,
+    CONF_HVAC_MODE_SET,
+    CONF_MAX_TEMP,
+    CONF_MIN_TEMP,
+    CONF_PRECISION,
+    CONF_PRESET_DP,
+    CONF_PRESET_SET,
+    CONF_SWING_HORIZONTAL_DP,
+    CONF_SWING_HORIZONTAL_MODES,
+    CONF_SWING_MODE_DP,
+    CONF_SWING_MODES,
+    CONF_TARGET_PRECISION,
+    CONF_TARGET_TEMPERATURE_DP,
+    CONF_TEMPERATURE_STEP,
+    DictSelector,
+)
 from .entity import LocalTuyaEntity, async_setup_entry
 
 _LOGGER = logging.getLogger(__name__)

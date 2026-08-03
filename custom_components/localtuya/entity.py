@@ -6,23 +6,43 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (ATTR_VIA_DEVICE, CONF_DEVICE_CLASS,
-                                 CONF_DEVICES, CONF_ENTITIES,
-                                 CONF_ENTITY_CATEGORY, CONF_FRIENDLY_NAME,
-                                 CONF_HOST, CONF_ICON, CONF_ID, CONF_PLATFORM,
-                                 STATE_UNAVAILABLE, STATE_UNKNOWN,
-                                 EntityCategory)
+from homeassistant.const import (
+    ATTR_VIA_DEVICE,
+    CONF_DEVICE_CLASS,
+    CONF_DEVICES,
+    CONF_ENTITIES,
+    CONF_ENTITY_CATEGORY,
+    CONF_FRIENDLY_NAME,
+    CONF_HOST,
+    CONF_ICON,
+    CONF_ID,
+    CONF_PLATFORM,
+    STATE_UNAVAILABLE,
+    STATE_UNKNOWN,
+    EntityCategory,
+)
 from homeassistant.core import HomeAssistant, State
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.dispatcher import (async_dispatcher_connect,
-                                              async_dispatcher_send)
+from homeassistant.helpers.dispatcher import (
+    async_dispatcher_connect,
+    async_dispatcher_send,
+)
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.restore_state import RestoreEntity
 from homeassistant.util import dt as dt_util
 
-from .const import (ATTR_STATE, CONF_DEFAULT_VALUE, CONF_NODE_ID, CONF_OFFSET,
-                    CONF_PASSIVE_ENTITY, CONF_RESTORE_ON_RECONNECT,
-                    CONF_SCALING, DOMAIN, RESTORE_STATES, DeviceConfig)
+from .const import (
+    ATTR_STATE,
+    CONF_DEFAULT_VALUE,
+    CONF_NODE_ID,
+    CONF_OFFSET,
+    CONF_PASSIVE_ENTITY,
+    CONF_RESTORE_ON_RECONNECT,
+    CONF_SCALING,
+    DOMAIN,
+    RESTORE_STATES,
+    DeviceConfig,
+)
 from .coordinator import HassLocalTuyaData, TuyaDevice
 from .core import pytuya
 

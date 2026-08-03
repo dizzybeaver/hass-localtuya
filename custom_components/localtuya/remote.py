@@ -10,15 +10,20 @@ from typing import Any, Iterable
 
 import voluptuous as vol
 from homeassistant.components import persistent_notification
-from homeassistant.components.remote import (ATTR_COMMAND, ATTR_COMMAND_TYPE,
-                                             ATTR_DELAY_SECS, ATTR_DEVICE,
-                                             ATTR_NUM_REPEATS, ATTR_TIMEOUT,
-                                             DOMAIN, RemoteEntity,
-                                             RemoteEntityFeature)
+from homeassistant.components.remote import (
+    ATTR_COMMAND,
+    ATTR_COMMAND_TYPE,
+    ATTR_DELAY_SECS,
+    ATTR_DEVICE,
+    ATTR_NUM_REPEATS,
+    ATTR_TIMEOUT,
+    DOMAIN,
+    RemoteEntity,
+    RemoteEntityFeature,
+)
 from homeassistant.const import STATE_OFF
 from homeassistant.core import HomeAssistant, ServiceCall, State, callback
-from homeassistant.exceptions import (NoEntitySpecifiedError,
-                                      ServiceValidationError)
+from homeassistant.exceptions import NoEntitySpecifiedError, ServiceValidationError
 from homeassistant.helpers.storage import Store
 
 from .config_flow import col_to_select

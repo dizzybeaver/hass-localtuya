@@ -5,12 +5,20 @@ import logging
 from functools import partial
 
 import voluptuous as vol
-from homeassistant.components.sensor import (DEVICE_CLASSES_SCHEMA, DOMAIN,
-                                             SensorDeviceClass, SensorEntity,
-                                             SensorStateClass)
-from homeassistant.const import (CONF_DEVICE_CLASS, CONF_UNIT_OF_MEASUREMENT,
-                                 UnitOfElectricCurrent,
-                                 UnitOfElectricPotential, UnitOfPower)
+from homeassistant.components.sensor import (
+    DEVICE_CLASSES_SCHEMA,
+    DOMAIN,
+    SensorDeviceClass,
+    SensorEntity,
+    SensorStateClass,
+)
+from homeassistant.const import (
+    CONF_DEVICE_CLASS,
+    CONF_UNIT_OF_MEASUREMENT,
+    UnitOfElectricCurrent,
+    UnitOfElectricPotential,
+    UnitOfPower,
+)
 from homeassistant.helpers import entity_registry as er
 from homeassistant.util import dt as dt_util
 

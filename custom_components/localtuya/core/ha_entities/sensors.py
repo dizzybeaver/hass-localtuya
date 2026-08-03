@@ -7,11 +7,21 @@
 """
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
-from homeassistant.const import (CONF_UNIT_OF_MEASUREMENT, DEGREE, LIGHT_LUX,
-                                 PERCENTAGE, UnitOfElectricCurrent,
-                                 UnitOfElectricPotential, UnitOfEnergy,
-                                 UnitOfLength, UnitOfMass, UnitOfPower,
-                                 UnitOfTemperature, UnitOfTime, UnitOfVolume)
+from homeassistant.const import (
+    CONF_UNIT_OF_MEASUREMENT,
+    DEGREE,
+    LIGHT_LUX,
+    PERCENTAGE,
+    UnitOfElectricCurrent,
+    UnitOfElectricPotential,
+    UnitOfEnergy,
+    UnitOfLength,
+    UnitOfMass,
+    UnitOfPower,
+    UnitOfTemperature,
+    UnitOfTime,
+    UnitOfVolume,
+)
 
 from ...const import CONF_SCALING as SCALE_FACTOR
 from .base import CLOUD_VALUE, DPCode, EntityCategory, LocalTuyaEntity

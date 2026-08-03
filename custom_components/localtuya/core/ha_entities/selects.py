@@ -12,7 +12,6 @@ from .base import CLOUD_VALUE, DPCode, EntityCategory, LocalTuyaEntity
 # from const.py this is temporarily.
 
 
-
 def localtuya_selector(options):
     """Generate localtuya select configs"""
     data = {OPS_VALS: CLOUD_VALUE(options, "id", "range", dict)}

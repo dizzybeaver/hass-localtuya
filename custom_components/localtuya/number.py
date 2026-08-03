@@ -4,14 +4,23 @@ import logging
 from functools import partial
 
 import voluptuous as vol
-from homeassistant.components.number import (DEVICE_CLASSES_SCHEMA, DOMAIN,
-                                             NumberEntity)
-from homeassistant.const import (CONF_DEVICE_CLASS, CONF_UNIT_OF_MEASUREMENT,
-                                 STATE_UNKNOWN)
+from homeassistant.components.number import DEVICE_CLASSES_SCHEMA, DOMAIN, NumberEntity
+from homeassistant.const import (
+    CONF_DEVICE_CLASS,
+    CONF_UNIT_OF_MEASUREMENT,
+    STATE_UNKNOWN,
+)
 
-from .const import (CONF_DEFAULT_VALUE, CONF_MAX_VALUE, CONF_MIN_VALUE,
-                    CONF_OFFSET, CONF_PASSIVE_ENTITY,
-                    CONF_RESTORE_ON_RECONNECT, CONF_SCALING, CONF_STEPSIZE)
+from .const import (
+    CONF_DEFAULT_VALUE,
+    CONF_MAX_VALUE,
+    CONF_MIN_VALUE,
+    CONF_OFFSET,
+    CONF_PASSIVE_ENTITY,
+    CONF_RESTORE_ON_RECONNECT,
+    CONF_SCALING,
+    CONF_STEPSIZE,
+)
 from .entity import LocalTuyaEntity, async_setup_entry
 
 _LOGGER = logging.getLogger(__name__)

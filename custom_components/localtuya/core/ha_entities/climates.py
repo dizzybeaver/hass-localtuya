@@ -9,13 +9,24 @@
 from homeassistant.components.climate import HVACAction, HVACMode
 from homeassistant.const import CONF_TEMPERATURE_UNIT
 
-from ...const import (CONF_CURRENT_TEMPERATURE_DP, CONF_ECO_VALUE,
-                      CONF_FAN_SPEED_DP, CONF_FAN_SPEED_LIST,
-                      CONF_HVAC_ACTION_DP, CONF_HVAC_ACTION_SET,
-                      CONF_HVAC_MODE_DP, CONF_HVAC_MODE_SET, CONF_MAX_TEMP,
-                      CONF_MIN_TEMP, CONF_PRECISION, CONF_PRESET_DP,
-                      CONF_PRESET_SET, CONF_TARGET_PRECISION,
-                      CONF_TARGET_TEMPERATURE_DP, CONF_TEMPERATURE_STEP)
+from ...const import (
+    CONF_CURRENT_TEMPERATURE_DP,
+    CONF_ECO_VALUE,
+    CONF_FAN_SPEED_DP,
+    CONF_FAN_SPEED_LIST,
+    CONF_HVAC_ACTION_DP,
+    CONF_HVAC_ACTION_SET,
+    CONF_HVAC_MODE_DP,
+    CONF_HVAC_MODE_SET,
+    CONF_MAX_TEMP,
+    CONF_MIN_TEMP,
+    CONF_PRECISION,
+    CONF_PRESET_DP,
+    CONF_PRESET_SET,
+    CONF_TARGET_PRECISION,
+    CONF_TARGET_TEMPERATURE_DP,
+    CONF_TEMPERATURE_STEP,
+)
 from .base import CLOUD_VALUE, DPCode, LocalTuyaEntity
 
 UNIT_C = "celsius"

@@ -6,8 +6,12 @@ from functools import partial
 
 import voluptuous as vol
 from homeassistant.components.alarm_control_panel import (
-    DOMAIN, AlarmControlPanelEntity, AlarmControlPanelEntityFeature,
-    AlarmControlPanelState, CodeFormat)
+    DOMAIN,
+    AlarmControlPanelEntity,
+    AlarmControlPanelEntityFeature,
+    AlarmControlPanelState,
+    CodeFormat,
+)
 from homeassistant.helpers.selector import ObjectSelector
 
 from .const import CONF_ALARM_SUPPORTED_STATES, DictSelector

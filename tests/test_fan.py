@@ -2,10 +2,12 @@
 
 import math
 
-from homeassistant.util.percentage import (ordered_list_item_to_percentage,
-                                           percentage_to_ordered_list_item,
-                                           percentage_to_ranged_value,
-                                           ranged_value_to_percentage)
+from homeassistant.util.percentage import (
+    ordered_list_item_to_percentage,
+    percentage_to_ordered_list_item,
+    percentage_to_ranged_value,
+    ranged_value_to_percentage,
+)
 
 from custom_components.localtuya.fan import DOMAIN as PLATFORM_DOMAIN
 from custom_components.localtuya.fan import LocalTuyaFan

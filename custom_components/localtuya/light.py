@@ -8,20 +8,34 @@ from functools import partial
 
 import homeassistant.util.color as color_util
 import voluptuous as vol
-from homeassistant.components.light import (ATTR_BRIGHTNESS,
-                                            ATTR_COLOR_TEMP_KELVIN,
-                                            ATTR_EFFECT, ATTR_HS_COLOR,
-                                            ATTR_WHITE, DOMAIN, ColorMode,
-                                            LightEntity, LightEntityFeature)
+from homeassistant.components.light import (
+    ATTR_BRIGHTNESS,
+    ATTR_COLOR_TEMP_KELVIN,
+    ATTR_EFFECT,
+    ATTR_HS_COLOR,
+    ATTR_WHITE,
+    DOMAIN,
+    ColorMode,
+    LightEntity,
+    LightEntityFeature,
+)
 from homeassistant.const import CONF_BRIGHTNESS, CONF_COLOR_TEMP, CONF_SCENE
 from homeassistant.helpers import selector
 
 from .config_flow import col_to_select
-from .const import (CONF_BRIGHTNESS_LOWER, CONF_BRIGHTNESS_UPPER, CONF_COLOR,
-                    CONF_COLOR_MODE, CONF_COLOR_MODE_SET,
-                    CONF_COLOR_TEMP_MAX_KELVIN, CONF_COLOR_TEMP_MIN_KELVIN,
-                    CONF_COLOR_TEMP_REVERSE, CONF_MUSIC_MODE,
-                    CONF_SCENE_VALUES, DictSelector)
+from .const import (
+    CONF_BRIGHTNESS_LOWER,
+    CONF_BRIGHTNESS_UPPER,
+    CONF_COLOR,
+    CONF_COLOR_MODE,
+    CONF_COLOR_MODE_SET,
+    CONF_COLOR_TEMP_MAX_KELVIN,
+    CONF_COLOR_TEMP_MIN_KELVIN,
+    CONF_COLOR_TEMP_REVERSE,
+    CONF_MUSIC_MODE,
+    CONF_SCENE_VALUES,
+    DictSelector,
+)
 from .entity import LocalTuyaEntity, async_setup_entry
 
 _LOGGER = logging.getLogger(__name__)

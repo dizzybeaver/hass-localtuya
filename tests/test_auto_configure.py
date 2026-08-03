@@ -1,7 +1,9 @@
 
 from custom_components.localtuya.const import PLATFORMS
 from custom_components.localtuya.core.ha_entities import (
-    DATA_PLATFORMS, gen_localtuya_entities)
+    DATA_PLATFORMS,
+    gen_localtuya_entities,
+)
 
 COVER_DEVICE_DATA = {
     "device_config": {

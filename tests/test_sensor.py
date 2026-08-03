@@ -7,8 +7,7 @@ import homeassistant.util.dt as dt_util
 
 from custom_components.localtuya.sensor import DOMAIN as PLATFORM_DOMAIN
 from custom_components.localtuya.sensor import LocalTuyaSensor
-from tests import (DEVICE_CONFIG, DEVICE_NAME, dispatch_disconnect,
-                   get_entites, init)
+from tests import DEVICE_CONFIG, DEVICE_NAME, dispatch_disconnect, get_entites, init
 
 # Raw 3-phase breaker payload -> 214.0 V, 1.2 A, 0.177 kW
 PHASE_B64 = "CFwABLAAALE="

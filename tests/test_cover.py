@@ -1,9 +1,12 @@
 """Test for localtuya."""
 
 from custom_components.localtuya.cover import DOMAIN as PLATFORM_DOMAIN
-from custom_components.localtuya.cover import (STATE_SET_CLOSING,
-                                               STATE_SET_OPENING,
-                                               STATE_STOPPED, LocalTuyaCover)
+from custom_components.localtuya.cover import (
+    STATE_SET_CLOSING,
+    STATE_SET_OPENING,
+    STATE_STOPPED,
+    LocalTuyaCover,
+)
 from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {

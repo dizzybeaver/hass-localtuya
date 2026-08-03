@@ -1,8 +1,7 @@
 """Test for localtuya."""
 
 from custom_components.localtuya.climate import DOMAIN as PLATFORM_DOMAIN
-from custom_components.localtuya.climate import (HVACAction, HVACMode,
-                                                 LocalTuyaClimate)
+from custom_components.localtuya.climate import HVACAction, HVACMode, LocalTuyaClimate
 from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 FAN_SPEED_LIST = ["auto", "low", "middle", "high"]

@@ -1,8 +1,12 @@
 """Test for localtuya."""
 
-from custom_components.localtuya.vacuum import CONF_MODE_DP, CONF_PAUSE_DP
+from custom_components.localtuya.vacuum import (
+    CONF_MODE_DP,
+    CONF_PAUSE_DP,
+    LocalTuyaVacuum,
+    VacuumActivity,
+)
 from custom_components.localtuya.vacuum import DOMAIN as PLATFORM_DOMAIN
-from custom_components.localtuya.vacuum import LocalTuyaVacuum, VacuumActivity
 from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {

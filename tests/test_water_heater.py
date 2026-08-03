@@ -1,11 +1,15 @@
 """Test for localtuya."""
 
 from custom_components.localtuya.water_heater import (
-    CONF_CURRENT_TEMPERATURE_DP, CONF_MODE_DP, CONF_MODES,
-    CONF_TARGET_TEMPERATURE_DP, CONF_TARGET_TEMPERATURE_HIGH_DP,
-    CONF_TARGET_TEMPERATURE_LOW_DP)
+    CONF_CURRENT_TEMPERATURE_DP,
+    CONF_MODE_DP,
+    CONF_MODES,
+    CONF_TARGET_TEMPERATURE_DP,
+    CONF_TARGET_TEMPERATURE_HIGH_DP,
+    CONF_TARGET_TEMPERATURE_LOW_DP,
+    LocalTuyaWaterHeater,
+)
 from custom_components.localtuya.water_heater import DOMAIN as PLATFORM_DOMAIN
-from custom_components.localtuya.water_heater import LocalTuyaWaterHeater
 from tests import DEVICE_CONFIG, DEVICE_NAME, get_entites, init
 
 CONFIG = {

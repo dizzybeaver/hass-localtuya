@@ -6,15 +6,25 @@ import time
 from functools import partial
 
 import voluptuous as vol
-from homeassistant.components.cover import (ATTR_POSITION,
-                                            DEVICE_CLASSES_SCHEMA, DOMAIN,
-                                            CoverEntity, CoverEntityFeature)
+from homeassistant.components.cover import (
+    ATTR_POSITION,
+    DEVICE_CLASSES_SCHEMA,
+    DOMAIN,
+    CoverEntity,
+    CoverEntityFeature,
+)
 from homeassistant.const import CONF_DEVICE_CLASS
 
 from .config_flow import col_to_select
-from .const import (CONF_COMMANDS_SET, CONF_CURRENT_POSITION_DP,
-                    CONF_POSITION_INVERTED, CONF_POSITIONING_MODE,
-                    CONF_SET_POSITION_DP, CONF_SPAN_TIME, CONF_STOP_SWITCH_DP)
+from .const import (
+    CONF_COMMANDS_SET,
+    CONF_CURRENT_POSITION_DP,
+    CONF_POSITION_INVERTED,
+    CONF_POSITIONING_MODE,
+    CONF_SET_POSITION_DP,
+    CONF_SPAN_TIME,
+    CONF_STOP_SWITCH_DP,
+)
 from .entity import LocalTuyaEntity, async_setup_entry
 
 # cover states.
