@@ -26,7 +26,7 @@ UNIT_F = "fahrenheit"
 
 
 def localtuya_water_heater(
-    modes={},
+    modes=None,
     unit=None,
     min_temperature=DEFAULT_MIN_TEMP,
     max_temperature=DEFAULT_MAX_TEMP,
@@ -34,6 +34,8 @@ def localtuya_water_heater(
     target_precision=1,
 ) -> dict:
     """Create localtuya climate configs"""
+    if modes is None:
+        modes = {}
     data = {}
     for key, conf in {
         CONF_MODES: CLOUD_VALUE(modes, CONF_MODE_DP, "range", dict),

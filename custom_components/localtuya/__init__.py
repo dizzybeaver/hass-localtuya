@@ -16,7 +16,6 @@ from homeassistant.const import (
     CONF_DEVICES,
     CONF_ENTITIES,
     CONF_HOST,
-    CONF_ID,
     CONF_PLATFORM,
     CONF_REGION,
     EVENT_HOMEASSISTANT_STOP,
@@ -464,21 +463,9 @@ async def async_remove_config_entry_device(
 
 async def async_remove_orphan_entities(hass, entry):
     """Remove entities associated with config entry that has been removed."""
+    # TODO: orphan-entity cleanup is currently disabled; the original logic
+    # was left as unreachable code after early returns. Restore when re-enabled.
     return
-    ent_reg = er.async_get(hass)
-    entities = {
-        ent.unique_id: ent.entity_id
-        for ent in er.async_entries_for_config_entry(ent_reg, entry.entry_id)
-    }
-    _LOGGER.info("ENTITIES ORPHAN %s", entities)
-    return
-
-    for entity in entry.data[CONF_ENTITIES]:
-        if entity[CONF_ID] in entities:
-            del entities[entity[CONF_ID]]
-
-    for entity_id in entities.values():
-        ent_reg.async_remove(entity_id)
 
 
 def _run_async_listen(hass: HomeAssistant, entry: ConfigEntry):

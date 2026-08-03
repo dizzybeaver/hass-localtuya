@@ -171,6 +171,7 @@ class LocalTuyaFan(LocalTuyaEntity, FanEntity):
         """Set the direction of the fan."""
         _LOGGER.debug("Fan async_set_direction: %s", direction)
 
+        value = None
         if direction == DIRECTION_FORWARD:
             value = self._config.get(CONF_FAN_DIRECTION_FWD)
 

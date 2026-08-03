@@ -108,6 +108,8 @@ def unpack_message(
     crc, suffix = struct.unpack(end_fmt, payload[-end_len:])
     payload = payload[:-end_len]
 
+    crc_good = False
+    iv = None
     if header.prefix == Affix.prefix_55aa.value:
         if hmac_key:
             have_crc = hmac.new(
@@ -199,7 +201,7 @@ def parse_header(data: bytes, logger=_LOGGER):
         prefix, seqno, cmd, payload_len = unpacked
         total_length = payload_len + header_len
     elif prefix == Affix.prefix_6699.value:
-        prefix, unknown, seqno, cmd, payload_len = unpacked
+        prefix, _unknown, seqno, cmd, payload_len = unpacked
         # seqno |= unknown << 32
         total_length = payload_len + header_len + len(Affix.suffix_6699.bin)
     else:
@@ -223,5 +225,3 @@ def parse_header(data: bytes, logger=_LOGGER):
 
 class DecodeError(Exception):
     """Specific Exception caused by decoding error."""
-
-    pass

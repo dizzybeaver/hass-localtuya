@@ -55,10 +55,12 @@ class LocalTuyaEntity:
         entity_category="None",
         device_class=None,
         state_class=None,
-        custom_configs: dict[str, Any | tuple[Any, CLOUD_VALUE]] = {},
+        custom_configs: dict[str, Any | tuple[Any, CLOUD_VALUE]] = None,
         condition_contains_any: list = None,
         **kwargs,
     ):
+        if custom_configs is None:
+            custom_configs = {}
         # platform, name, icon, entity_category, device_class, *key
         # self.platform = platform
         self.name = name

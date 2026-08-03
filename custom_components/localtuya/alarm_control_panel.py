@@ -115,10 +115,6 @@ class LocalTuyaAlarmControlPanel(LocalTuyaEntity, AlarmControlPanelEntity):
         state = self._states.to_tuya(AlarmControlPanelState.TRIGGERED)
         await self._device.set_dp(state, self._dp_id)
 
-    def status_updated(self):
-        """Device status was updated."""
-        super().status_updated()
-
     # No need to restore state for a AlarmControlPanel
     async def restore_state_when_connected(self):
         """Do nothing for a AlarmControlPanel."""

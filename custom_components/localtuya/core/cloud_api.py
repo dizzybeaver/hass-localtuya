@@ -136,8 +136,10 @@ class TuyaCloudApi:
         # self._logger.debug("PAYLOAD: %s", payload)
         return payload
 
-    async def async_make_request(self, method, url, body=None, headers={}):
+    async def async_make_request(self, method, url, body=None, headers=None):
         """Perform requests."""
+        if headers is None:
+            headers = {}
         # obtain new token if expired.
         if not self.token_validate and self._token_expire_time != -1:
             if (res := await self.async_get_access_token()) and res != "ok":

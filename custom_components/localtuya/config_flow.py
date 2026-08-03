@@ -189,7 +189,7 @@ class LocaltuyaConfigFlow(ConfigFlow, domain=DOMAIN):
                     user_input[i] = ""
                 return await self._create_entry(user_input)
 
-            cloud_api, res = await attempt_cloud_connection(user_input)
+            _cloud_api, res = await attempt_cloud_connection(user_input)
 
             if not res:
                 return await self._create_entry(user_input)
@@ -640,6 +640,8 @@ class LocalTuyaOptionsFlowHandler(OptionsFlow):
             err_msg = "Your device category isn't supported"
         elif not dev_data:
             err_msg = f"Couldn't find the data for your device category: {category}."
+        else:
+            err_msg = ""
 
         placeholders = {"err_msg": err_msg}
 
@@ -928,6 +930,7 @@ async def setup_localtuya_devices(
     for dev_id, dev_data in copy.deepcopy(devices).items():
         category = devices_cloud_data[dev_id].get("category")
         dev_data[DEVICE_CLOUD_DATA] = devices_cloud_data[dev_id]
+        dev_entites = []
         if category and dev_data.get(CONF_DPS_STRINGS, False):
             dev_entites = gen_localtuya_entities(dev_data, category)
 
